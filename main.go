@@ -17,6 +17,9 @@ func main() {
 	for NLEVEL := 1; NLEVEL <= 256; NLEVEL++ {
 		fmt.Print(math.Pow(8, float64(NLEVEL-1)), " ")
 		flops = 0
+		totalPartners = 0
+		totalNear = 0
+		totalCells = 0
 		level = make([][]*Cell, NLEVEL)
 
 		root = Cell{size: Vector{1, 1, 1}}
@@ -24,6 +27,7 @@ func main() {
 		root.Divide(NLEVEL)
 		log.Println("finding partners")
 		root.FindPartners(level[0])
+		printStats()
 		log.Println("start")
 		start := time.Now()
 		root.UpdateM()
@@ -40,4 +44,9 @@ func main() {
 		//}
 
 	}
+}
+
+func printStats() {
+	nLeaf := int(math.Pow(8, float64(len(level)-1)) + 0.5)
+	log.Println(totalCells, "cells, avg", totalPartners/totalCells, "partners/cell, avg", totalNear/nLeaf, "near/leaf")
 }

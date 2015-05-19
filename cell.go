@@ -13,7 +13,12 @@ type Cell struct {
 	particle []Particle // If I'm a leaf cell, particles inside me (nil otherwise)
 }
 
-var flops = 0
+var (
+	flops         int
+	totalPartners int
+	totalNear     int
+	totalCells    int
+)
 
 func (c *Cell) UpdateB() {
 	if c == nil {
@@ -65,6 +70,7 @@ func (c *Cell) FindPartners(candidates []*Cell) {
 	for _, cand := range candidates {
 		if IsFar(c, cand) {
 			c.partner = append(c.partner, cand)
+			totalPartners++
 		} else {
 			near = append(near, cand)
 		}
@@ -73,7 +79,8 @@ func (c *Cell) FindPartners(candidates []*Cell) {
 	// leaf cell uses near cells for brute-force,
 	// others recursively pass near cells children as new candidates
 	if c.IsLeaf() {
-		c.near = near
+		c.near = near // TODO: memory-local copy?
+		totalNear += len(near)
 	} else {
 		// children of my near cells become parter candidates
 		newCand := make([]*Cell, 0, 8*len(near))
@@ -113,6 +120,7 @@ func (c *Cell) Divide(nLevels int) {
 	// add to global level array
 	myLevel := len(level) - nLevels
 	level[myLevel] = append(level[myLevel], c)
+	totalCells++
 
 	if nLevels == 1 {
 		return
