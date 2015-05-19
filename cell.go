@@ -4,13 +4,15 @@ import "fmt"
 
 // Cell in the FMM tree
 type Cell struct {
-	child    [8]*Cell   // octree of child cells
-	partner  []*Cell    // I receive field taylor expansions from these cells
-	near     []*Cell    // I recieve brute-force field contributions form these cells
-	center   Vector     // my position
-	size     Vector     // my diameter (x, y, z)
-	m        Vector     // sum of child+particle magnetizations
-	particle []Particle // If I'm a leaf cell, particles inside me (nil otherwise)
+	child            [8]*Cell   // octree of child cells
+	partner          []*Cell    // I receive field taylor expansions from these cells
+	near             []*Cell    // I recieve brute-force field contributions form these cells
+	center           Vector     // my position
+	size             Vector     // my diameter (x, y, z)
+	m                Vector     // sum of child+particle magnetizations
+	b0               Vector     // Field in cell center
+	dbdx, dbdy, dbdz Vector     // Derivatives for Taylor expansion of field around center
+	particle         []Particle // If I'm a leaf cell, particles inside me (nil otherwise)
 }
 
 var (
@@ -20,19 +22,44 @@ var (
 	totalCells    int
 )
 
-func (c *Cell) UpdateB() {
+func (c *Cell) UpdateB(parent *Cell) {
 	if c == nil {
 		return
 	}
+
+	// propagete parent field expansion to this cell,
+	// (applies shift to Taylor expansion)
+	if parent == nil {
+		c.b0 = Vector{0, 0, 0}
+		c.dbdx = Vector{0, 0, 0}
+		c.dbdy = Vector{0, 0, 0}
+		c.dbdz = Vector{0, 0, 0}
+	} else {
+		sh := c.center.Sub(parent.center)
+		c.b0 = parent.b0.Madd(sh[X], parent.dbdx).Madd(sh[Y], parent.dbdy).Madd(sh[Z], parent.dbdz)
+		c.dbx = parent.dbx
+		c.dby = parent.dby
+		c.dbz = parent.dbz
+	}
+
 	for _, _ = range c.partner {
-		flops++
+		// dipole = c.partner.m
+		// c.b0 += dipole field at my position
+		// c.bx += d dipole filed / dx at my position
+		// ...
 	}
-	for _, _ = range c.near {
-		flops++
-	}
+
 	for _, c := range c.child {
 		c.UpdateB()
 	}
+
+	// only if leaf cell:
+	// for all my particles:
+	for _, n = range c.near {
+		// for all n's particles
+		// my particle b += n's particle's field
+	}
+
 }
 
 // recursively update this cell's m as the sum
