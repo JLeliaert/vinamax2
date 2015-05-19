@@ -13,6 +13,46 @@ type Cell struct {
 	particle []Particle // If I'm a leaf cell, particles inside me (nil otherwise)
 }
 
+var flops = 0
+
+func (c *Cell) UpdateB() {
+	if c == nil {
+		return
+	}
+	for _, _ = range c.partner {
+		flops++
+	}
+	for _, _ = range c.near {
+		flops++
+	}
+	for _, c := range c.child {
+		c.UpdateB()
+	}
+}
+
+// recursively update this cell's m as the sum
+// of its children's m.
+func (c *Cell) UpdateM() {
+	flops++
+	c.m = Vector{0, 0, 0}
+
+	// leaf node: sum particle m's.
+	if c.particle != nil {
+		for _, p := range c.particle {
+			c.m = c.m.Add(p.m)
+		}
+		return
+	}
+
+	// non-leaf: update children, then add to me.
+	for _, ch := range c.child {
+		if ch != nil {
+			ch.UpdateM()
+			c.m = c.m.Add(ch.m)
+		}
+	}
+}
+
 // Recursively find partner cells from a list candidates.
 // To be called on the root cell with level[0] as candidates.
 // Partners are selected from a cell's own level, so they have the same size
