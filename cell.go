@@ -4,15 +4,15 @@ import "fmt"
 
 // Cell in the FMM tree
 type Cell struct {
-	child            [8]*Cell   // octree of child cells
-	partner          []*Cell    // I receive field taylor expansions from these cells
-	near             []*Cell    // I recieve brute-force field contributions form these cells
-	center           Vector     // my position
-	size             Vector     // my diameter (x, y, z)
-	m                Vector     // sum of child+particle magnetizations
-	b0               Vector     // Field in cell center
-	dbdx, dbdy, dbdz Vector     // Derivatives for Taylor expansion of field around center
-	particle         []Particle // If I'm a leaf cell, particles inside me (nil otherwise)
+	child            [8]*Cell    // octree of child cells
+	partner          []*Cell     // I receive field taylor expansions from these cells
+	near             []*Cell     // I recieve brute-force field contributions form these cells
+	center           Vector      // my position
+	size             Vector      // my diameter (x, y, z)
+	m                Vector      // sum of child+particle magnetizations
+	b0               Vector      // Field in cell center
+	dbdx, dbdy, dbdz Vector      // Derivatives for Taylor expansion of field around center
+	particle         []*Particle // If I'm a leaf cell, particles inside me (nil otherwise)
 }
 
 var (
@@ -36,28 +36,45 @@ func (c *Cell) UpdateB(parent *Cell) {
 		c.dbdz = Vector{0, 0, 0}
 	} else {
 		sh := c.center.Sub(parent.center)
-		c.b0 = parent.b0.Madd(sh[X], parent.dbdx).Madd(sh[Y], parent.dbdy).Madd(sh[Z], parent.dbdz)
-		c.dbx = parent.dbx
-		c.dby = parent.dby
-		c.dbz = parent.dbz
+		c.b0 = parent.b0.MAdd(sh[X], parent.dbdx).MAdd(sh[Y], parent.dbdy).MAdd(sh[Z], parent.dbdz)
+		c.dbdx = parent.dbdx
+		c.dbdy = parent.dbdy
+		c.dbdz = parent.dbdz
 	}
 
-	for _, _ = range c.partner {
-		// dipole = c.partner.m
-		// c.b0 += dipole field at my position
-		// c.bx += d dipole filed / dx at my position
-		// ...
+	// add expansions of fields of partner sources
+	for _, p := range c.partner {
+		r := c.center.Sub(p.center)
+		if r.Dot(r) == 0 {
+			panic("self")
+		}
+		B := DipoleField(p.m, r)
+		c.b0 = c.b0.Add(B)
+		//c.bx.add(derivative of B)
+		// ..
 	}
 
-	for _, c := range c.child {
-		c.UpdateB()
+	// if !leaf:
+	// propagete to children
+	for _, ch := range c.child {
+		ch.UpdateB(c)
 	}
 
-	// only if leaf cell:
-	// for all my particles:
-	for _, n = range c.near {
-		// for all n's particles
-		// my particle b += n's particle's field
+	// if leaf cell:
+	for _, dst := range c.particle {
+
+		dst.b = c.b0 // TODO: propagete derivatives!
+
+		for _, n := range c.near {
+			for _, src := range n.particle {
+				r := dst.center.Sub(src.center)
+				if r.Dot(r) != 0 { // exclude self
+					B := DipoleField(src.m, r)
+					checkNaNs(B)
+					dst.b = dst.b.Add(B)
+				}
+			}
+		}
 	}
 
 }

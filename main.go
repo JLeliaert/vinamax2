@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"math"
-	"time"
 )
 
 var (
@@ -14,39 +13,66 @@ var (
 
 func main() {
 
-	for NLEVEL := 1; NLEVEL <= 256; NLEVEL++ {
-		fmt.Print(math.Pow(8, float64(NLEVEL-1)), " ")
-		flops = 0
-		totalPartners = 0
-		totalNear = 0
-		totalCells = 0
-		level = make([][]*Cell, NLEVEL)
+	NLEVEL := 4
 
-		root = Cell{size: Vector{1, 1, 1}}
-		log.Println("dividing")
-		root.Divide(NLEVEL)
-		log.Println("finding partners")
-		root.FindPartners(level[0])
-		printStats()
-		log.Println("start")
-		start := time.Now()
-		root.UpdateM()
-		root.UpdateB()
+	level = make([][]*Cell, NLEVEL)
 
-		fmt.Println(flops, " ", float64(time.Since(start).Nanoseconds())/1e9)
+	root = Cell{size: Vector{1, 1, 1}}
 
-		//for l := range level {
-		//	fmt.Println("level", l)
-		//	for _, c := range level[l] {
-		//		fmt.Println(c)
-		//	}
-		//	fmt.Println()
-		//}
+	log.Println("dividing")
+	root.Divide(NLEVEL)
 
+	baseLevel := level[NLEVEL-1]
+	// place particles with m=0 as field probes
+	for _, c := range baseLevel {
+		c.particle = []*Particle{&Particle{m: Vector{0, 0, 0}, center: c.center}}
 	}
+
+	// place on particle
+	hotcell := baseLevel[0]
+	hotcell.particle = []*Particle{&Particle{m: Vector{1, 0, 0}, center: hotcell.center}}
+
+	log.Println("finding partners")
+	root.FindPartners(level[0])
+	printStats()
+
+	root.UpdateM()
+	checkNaNs(root.m)
+	root.UpdateB(nil)
+
+	for _, c := range baseLevel {
+		for _, p := range c.particle {
+			r := p.center
+			b := p.b.Div(p.b.Len()).Mul(c.size[X]) // normalize
+			if r[Z] == -0.4375 {
+				fmt.Println(r[X], r[Y], r[Z], b[X], b[Y], b[Z])
+			}
+		}
+	}
+
+	//for l := range level {
+	//	fmt.Println("level", l)
+	//	for _, c := range level[l] {
+	//		fmt.Println(c)
+	//	}
+	//	fmt.Println()
+	//}
+
 }
 
 func printStats() {
 	nLeaf := int(math.Pow(8, float64(len(level)-1)) + 0.5)
 	log.Println(totalCells, "cells, avg", totalPartners/totalCells, "partners/cell, avg", totalNear/nLeaf, "near/leaf")
+}
+
+func checkNaNs(x Vector) {
+	checkNaN(x[X])
+	checkNaN(x[Y])
+	checkNaN(x[Z])
+}
+
+func checkNaN(x float64) {
+	if math.IsNaN(x) {
+		panic("NaN")
+	}
 }
