@@ -15,6 +15,10 @@ func (v Vector) Mul3(a Vector) Vector {
 	return Vector{a[0] * v[0], a[1] * v[1], a[2] * v[2]}
 }
 
+func (v Vector) Abs() Vector {
+	return Vector{math.Abs(v[0]), math.Abs(v[1]), math.Abs(v[2])}
+}
+
 // Returns (1/a)*v.
 func (v Vector) Div(a float64) Vector {
 	return v.Mul(1 / a)
@@ -39,6 +43,15 @@ func (a Vector) Sub(b Vector) Vector {
 func (v Vector) Len() float64 {
 	len2 := v.Dot(v)
 	return math.Sqrt(len2)
+}
+
+// Returns the uniform norm of v
+// (maximum of absolute values of components)
+func (v Vector) MaxNorm() float64 {
+	x := math.Abs(v[0])
+	y := math.Abs(v[1])
+	z := math.Abs(v[2])
+	return math.Max(math.Max(x, y), z)
 }
 
 // Returns the dot (inner) product a.b.

@@ -3,8 +3,9 @@ package main
 import "fmt"
 
 var (
-	root  Cell      // roots the entire FMM tree
-	level [][]*Cell // for each level of the FMM tree: all cells on that level. Root = level 0
+	root          Cell      // roots the entire FMM tree
+	level         [][]*Cell // for each level of the FMM tree: all cells on that level. Root = level 0
+	ProximityDist float64   = 2
 )
 
 func main() {
@@ -13,9 +14,13 @@ func main() {
 
 	root = Cell{size: Vector{1, 1, 1}}
 	root.Divide(NLEVEL)
+	root.FindPartners(level[0])
 
-	l := level[2]
-	for _, c := range l {
-		fmt.Println("level", l, ":", c)
+	for l := range level {
+		fmt.Println("level", l)
+		for _, c := range level[l] {
+			fmt.Println(c)
+		}
+		fmt.Println()
 	}
 }
