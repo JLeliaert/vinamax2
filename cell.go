@@ -58,18 +58,11 @@ func (c *Cell) IsLeaf() bool {
 	return true
 }
 
-// Are the cells considered far separated compared to ProximityDist?
+// Are the cells considered far separated?
 func IsFar(a, b *Cell) bool {
-	return RelDist(a, b) > ProximityDist
-}
-
-// Cell distance relative to size
-func RelDist(a, b *Cell) float64 {
-	delta := a.center.Sub(b.center).Abs()
-	delta = delta.Sub(a.size)
-	dist := delta.Len()
-	cellsize := a.size.MaxNorm()
-	return dist / cellsize
+	// TODO: this is more or less a touch criterion: improve!
+	dist := a.center.Sub(b.center).Len()
+	return dist > 1.1*a.size.Len()
 }
 
 // Create child cells to reach nLevels of levels and add to global level array.

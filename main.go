@@ -3,9 +3,8 @@ package main
 import "fmt"
 
 var (
-	root          Cell      // roots the entire FMM tree
-	level         [][]*Cell // for each level of the FMM tree: all cells on that level. Root = level 0
-	ProximityDist float64   = 2
+	root  Cell      // roots the entire FMM tree
+	level [][]*Cell // for each level of the FMM tree: all cells on that level. Root = level 0
 )
 
 func main() {
