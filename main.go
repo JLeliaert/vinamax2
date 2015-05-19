@@ -9,42 +9,46 @@ import (
 var (
 	root  Cell      // roots the entire FMM tree
 	level [][]*Cell // for each level of the FMM tree: all cells on that level. Root = level 0
+
+	// statistics:
+	totalPartners int
+	totalNear     int
+	totalCells    int
 )
 
 func main() {
 
-	NLEVEL := 4
-
+	NLEVEL := 5
 	level = make([][]*Cell, NLEVEL)
-
 	root = Cell{size: Vector{1, 1, 1}}
 
 	log.Println("dividing")
 	root.Divide(NLEVEL)
 
-	baseLevel := level[NLEVEL-1]
-	// place particles with m=0 as field probes
-	for _, c := range baseLevel {
-		c.particle = []*Particle{&Particle{m: Vector{0, 0, 0}, center: c.center}}
-	}
-
-	// place on particle
-	hotcell := baseLevel[0]
-	hotcell.particle = []*Particle{&Particle{m: Vector{1, 0, 0}, center: hotcell.center}}
-
 	log.Println("finding partners")
 	root.FindPartners(level[0])
 	printStats()
 
+	// place particles with m=0 , as field probes
+	baseLevel := level[NLEVEL-1]
+	for _, c := range baseLevel {
+		c.particle = []*Particle{&Particle{m: Vector{0, 0, 0}, center: c.center}}
+	}
+
+	// place one magneticed particle as source
+	hotcell := baseLevel[0]
+	hotcell.particle = []*Particle{&Particle{m: Vector{1, 0, 0}, center: hotcell.center}}
+
+	// calc B demag
 	root.UpdateM()
-	checkNaNs(root.m)
 	root.UpdateB(nil)
 
+	// output one layer
 	for _, c := range baseLevel {
 		for _, p := range c.particle {
 			r := p.center
 			b := p.b.Div(p.b.Len()).Mul(c.size[X]) // normalize
-			if r[Z] == -0.4375 {
+			if r[Z] == -0.46875 {
 				fmt.Println(r[X], r[Y], r[Z], b[X], b[Y], b[Z])
 			}
 		}

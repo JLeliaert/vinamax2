@@ -15,13 +15,6 @@ type Cell struct {
 	particle         []*Particle // If I'm a leaf cell, particles inside me (nil otherwise)
 }
 
-var (
-	flops         int
-	totalPartners int
-	totalNear     int
-	totalCells    int
-)
-
 func (c *Cell) UpdateB(parent *Cell) {
 	if c == nil {
 		return
@@ -55,7 +48,7 @@ func (c *Cell) UpdateB(parent *Cell) {
 	}
 
 	// if !leaf:
-	// propagete to children
+	// propagete field to children
 	for _, ch := range c.child {
 		ch.UpdateB(c)
 	}
@@ -63,14 +56,16 @@ func (c *Cell) UpdateB(parent *Cell) {
 	// if leaf cell:
 	for _, dst := range c.particle {
 
-		dst.b = c.b0 // TODO: propagete derivatives!
+		// start with field from cell's Taylor expansion:
+		sh := dst.center.Sub(c.center)
+		dst.b = c.b0.MAdd(sh[X], c.dbdx).MAdd(sh[Y], c.dbdy).MAdd(sh[Z], c.dbdz)
 
+		// then add, in a brute-force way, the near particle's fields
 		for _, n := range c.near {
 			for _, src := range n.particle {
 				r := dst.center.Sub(src.center)
 				if r.Dot(r) != 0 { // exclude self
 					B := DipoleField(src.m, r)
-					checkNaNs(B)
 					dst.b = dst.b.Add(B)
 				}
 			}
@@ -82,7 +77,6 @@ func (c *Cell) UpdateB(parent *Cell) {
 // recursively update this cell's m as the sum
 // of its children's m.
 func (c *Cell) UpdateM() {
-	flops++
 	c.m = Vector{0, 0, 0}
 
 	// leaf node: sum particle m's.
@@ -106,6 +100,7 @@ func (c *Cell) UpdateM() {
 // To be called on the root cell with level[0] as candidates.
 // Partners are selected from a cell's own level, so they have the same size
 // (otherwise it's just anarchy!)
+// TODO: when we have unit tests, it can be optimized not to do so many allocations
 func (c *Cell) FindPartners(candidates []*Cell) {
 
 	// select partners based on proximity,
@@ -123,7 +118,7 @@ func (c *Cell) FindPartners(candidates []*Cell) {
 	// leaf cell uses near cells for brute-force,
 	// others recursively pass near cells children as new candidates
 	if c.IsLeaf() {
-		c.near = near // TODO: memory-local copy?
+		c.near = near
 		totalNear += len(near)
 	} else {
 		// children of my near cells become parter candidates
