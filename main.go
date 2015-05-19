@@ -2,12 +2,20 @@ package main
 
 import "fmt"
 
-func main() {
-	root := Cell{size: Vector{1, 1, 1}}
-	root.divide(2)
+var (
+	root  Cell      // roots the entire FMM tree
+	level [][]*Cell // for each level of the FMM tree: all cells on that level. Root = level 0
+)
 
-	fmt.Println(root)
-	for i, c := range root.child[0].child {
-		fmt.Println("child", i, ":", c)
+func main() {
+	NLEVEL := 3
+	level = make([][]*Cell, NLEVEL)
+
+	root = Cell{size: Vector{1, 1, 1}}
+	root.Divide(NLEVEL)
+
+	l := level[2]
+	for _, c := range l {
+		fmt.Println("level", l, ":", c)
 	}
 }

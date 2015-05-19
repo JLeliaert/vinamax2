@@ -18,9 +18,16 @@ var direction = [8]Vector{
 	{-1, -1, -1}, {-1, -1, +1}, {-1, +1, -1}, {-1, +1, +1},
 	{+1, -1, -1}, {+1, -1, +1}, {+1, +1, -1}, {+1, +1, +1}}
 
-// create child cells, n levels deep
-func (c *Cell) divide(levels int) {
-	if levels == 0 {
+// Create child cells to reach nLevels of levels and add to global level array.
+// nLevels == 1 stops creating children (we always already have at least 1 level),
+// but still adds the cell to the global level array.
+func (c *Cell) Divide(nLevels int) {
+
+	myLevel := len(level) - nLevels
+	println(nLevels, myLevel)
+	level[myLevel] = append(level[myLevel], c)
+
+	if nLevels == 1 {
 		return
 	}
 
@@ -32,7 +39,7 @@ func (c *Cell) divide(levels int) {
 
 	// recursively divide further
 	for _, c := range c.child {
-		c.divide(levels - 1)
+		c.Divide(nLevels - 1)
 	}
 }
 
