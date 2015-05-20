@@ -12,6 +12,7 @@ func DipoleField(m, R Vector) Vector {
 
 	m_R := m.Dot(R)
 
+	// TODO: use vectors
 	Bx := (1 / (4 * math.Pi)) * ((3 * m_R * R[X] / r5) - (m[X] / r3))
 	By := (1 / (4 * math.Pi)) * ((3 * m_R * R[Y] / r5) - (m[Y] / r3))
 	Bz := (1 / (4 * math.Pi)) * ((3 * m_R * R[Z] / r5) - (m[Z] / r3))
