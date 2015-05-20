@@ -41,9 +41,9 @@ func check(e error) {
 func averages(lijst []*particle) vector {
 	avgs := vector{0, 0, 0}
 	for i := range lijst {
-		avgs[0] += lijst[i].m[0]
-		avgs[1] += lijst[i].m[1]
-		avgs[2] += lijst[i].m[2]
+		avgs[0] += lijst[i].M[0]
+		avgs[1] += lijst[i].M[1]
+		avgs[2] += lijst[i].M[2]
 	}
 	return avgs.times(1. / float64(len(lijst)))
 }
@@ -56,9 +56,9 @@ func averagemoments(lijst []*particle) vector {
 		radius := lijst[i].r
 		volume := cube(radius) * 4. / 3. * math.Pi
 		totalvolume += volume
-		avgs[0] += lijst[i].m[0] * volume
-		avgs[1] += lijst[i].m[1] * volume
-		avgs[2] += lijst[i].m[2] * volume
+		avgs[0] += lijst[i].M[0] * volume
+		avgs[1] += lijst[i].M[1] * volume
+		avgs[2] += lijst[i].M[2] * volume
 	}
 	//divide by total volume
 	return avgs.times(1. / totalvolume)
@@ -69,9 +69,9 @@ func averagemoments(lijst []*particle) vector {
 func averagemdoth(lijst []*particle) float64 {
 	avg := 0.
 	for i := range lijst {
-		xcomp := lijst[i].m[0] * lijst[i].heff[0]
-		ycomp := lijst[i].m[1] * lijst[i].heff[1]
-		zcomp := lijst[i].m[2] * lijst[i].heff[2]
+		xcomp := lijst[i].M[0] * lijst[i].heff[0]
+		ycomp := lijst[i].M[1] * lijst[i].heff[1]
+		zcomp := lijst[i].M[2] * lijst[i].heff[2]
 		avg = (xcomp + ycomp + zcomp) / mu0
 	}
 	return (avg)
@@ -81,7 +81,7 @@ func averagemdoth(lijst []*particle) float64 {
 func nrmzpositive(lijst []*particle) int {
 	counter := 0
 	for i := range lijst {
-		if lijst[i].m[2] > 0. {
+		if lijst[i].M[2] > 0. {
 			counter++
 		}
 	}
@@ -210,7 +210,7 @@ func Save(a string) {
 			check(err)
 
 			for i := range universe.lijst {
-				string := fmt.Sprintf("%v\t%v\t%v\t%v\t%v\t%v\t%v\t%v\n", universe.lijst[i].x, universe.lijst[i].y, universe.lijst[i].z, universe.lijst[i].r, universe.lijst[i].msat, universe.lijst[i].m[0], universe.lijst[i].m[1], universe.lijst[i].m[2])
+				string := fmt.Sprintf("%v\t%v\t%v\t%v\t%v\t%v\t%v\t%v\n", universe.lijst[i].x, universe.lijst[i].y, universe.lijst[i].z, universe.lijst[i].r, universe.lijst[i].msat, universe.lijst[i].M[0], universe.lijst[i].M[1], universe.lijst[i].M[2])
 				_, error = file.WriteString(string)
 				check(error)
 			}

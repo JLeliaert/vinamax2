@@ -1,7 +1,7 @@
 package main
 
 type Particle struct {
-	m       Vector  // magnetization
+	M       Vector  // magnetization
 	b       Vector  // demag field
 	center  Vector  // particle position
 	u_anis  Vector  // Uniaxial anisotropy axis
