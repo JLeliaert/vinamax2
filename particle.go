@@ -74,7 +74,7 @@ func C2anisotropy_axis(x, y, z float64) {
 	for i := range Particles {
 		if Particles[i].c1_anis.Dot(a) == 0 {
 			Particles[i].c2_anis = a
-			b:=Particles[i].c1_anis.Cross(a)
+			b := Particles[i].c1_anis.Cross(a)
 			norm(b)
 			Particles[i].c3_anis = b
 		} else {
@@ -106,7 +106,6 @@ func M_random() {
 	}
 }
 
-
 //Gives all particles a specified magnetisation direction
 func M_uniform(x, y, z float64) {
 	magnetisationcalled = true
@@ -124,3 +123,7 @@ func Msat(x float64) {
 		Particles[i].msat = x
 	}
 }
+
+// TODO (j): just export b field + rename
+func (p *Particle) Bdemag() Vector { return p.b }
+func (p *Particle) Center() Vector { return p.center }

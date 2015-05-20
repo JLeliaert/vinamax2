@@ -9,11 +9,18 @@ import (
 	"math"
 )
 
+var (
+	flagProf = flag.Bool("prof", false, "turn on CPU profiling")
+)
+
 func main() {
+	defer Cleanup()
 
 	flag.Parse()
 
-	defer Cleanup()
+	if *flagProf {
+		InitCPUProfile()
+	}
 
 	worldSize := Vector{1, 1, 1}
 	NLEVEL := 5
@@ -23,19 +30,19 @@ func main() {
 	// place particles with m=0 , as field probes
 	baseLevel := Level[NLEVEL-1]
 	for _, c := range baseLevel {
-		AddParticle(&Particle{M: Vector{0, 0, 0}, center: c.center})
+		AddParticle(NewParticle(c.Center(), Vector{}))
 	}
 
 	// place one magneticed particle as source
 	hotcell := baseLevel[0]
-	AddParticle(&Particle{M: Vector{1, 2, 3}, center: hotcell.center})
+	AddParticle(NewParticle(hotcell.Center(), Vector{1, 2, 3}))
 
 	CalcDemag()
 
 	// output one layer
 	for _, p := range Particles {
-		r := p.center
-		b := p.b.Div(p.b.Len()).Mul(1. / 16.) // normalize
+		r := p.Center()
+		b := p.Bdemag().Div(p.Bdemag().Len()).Mul(1. / 16.) // normalize
 		if r[Z] == -0.46875 {
 			fmt.Println(r[X], r[Y], r[Z], b[X], b[Y], b[Z])
 		}

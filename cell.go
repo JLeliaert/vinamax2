@@ -211,6 +211,8 @@ func (c *Cell) Divide(nLevels int) {
 	}
 }
 
+func (c *Cell) Center() Vector { return c.center }
+
 func (c *Cell) String() string {
 	if c == nil {
 		return "nil"
