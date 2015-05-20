@@ -24,12 +24,12 @@ func InitFMM(nLevels int) {
 	Root = Cell{size: Vector{1, 1, 1}}
 
 	start := time.Now()
-	log.Print("dividing", nLevels, "levels", math.Pow(8, float64(nLevels-1)), "base cells")
+	log.Println("dividing", nLevels, "levels", math.Pow(8, float64(nLevels-1)), "base cells...")
 	Root.Divide(nLevels)
 	log.Println(time.Since(start))
 
 	start = time.Now()
-	log.Print("finding partners")
+	log.Println("finding partners...")
 	Root.FindPartners(Level[0])
 	log.Println(time.Since(start))
 
