@@ -49,7 +49,7 @@ func (v Vector) Len() float64 {
 func norm(x Vector) { 
         magnitude := math.Sqrt(x[0]*x[0] + x[1]*x[1] + x[2]*x[2]) 
         x= x.Mul(1. / magnitude) 
-}       
+}     
 
 
 // Returns the uniform norm of v
