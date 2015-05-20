@@ -1,7 +1,6 @@
 package vinamax2
 
 import (
-	"fmt"
 	"log"
 	"math"
 )
@@ -15,27 +14,25 @@ func main() {
 	// place particles with m=0 , as field probes
 	baseLevel := Level[NLEVEL-1]
 	for _, c := range baseLevel {
-		c.particle = []*Particle{&Particle{M: Vector{0, 0, 0}, center: c.center}}
+		AddParticle(&Particle{M: Vector{0, 0, 0}, center: c.center})
 	}
 
 	// place one magneticed particle as source
 	hotcell := baseLevel[0]
-	hotcell.particle = []*Particle{&Particle{M: Vector{1, 0, 0}, center: hotcell.center}}
+	AddParticle(&Particle{M: Vector{1, 0, 0}, center: hotcell.center})
 
 	// calc B demag
 	Root.UpdateM()
 	Root.UpdateB(nil)
 
 	// output one layer
-	for _, c := range baseLevel {
-		for _, p := range c.particle {
-			r := p.center
-			b := p.b.Div(p.b.Len()).Mul(c.size[X]) // normalize
-			if r[Z] == -0.46875 {
-				fmt.Println(r[X], r[Y], r[Z], b[X], b[Y], b[Z])
-			}
-		}
-	}
+	//for _, p := range Particles {
+	//	r := p.center
+	//	b := p.b.Div(p.b.Len()).Mul(c.size[X]) // normalize
+	//	if r[Z] == -0.46875 {
+	//		fmt.Println(r[X], r[Y], r[Z], b[X], b[Y], b[Z])
+	//	}
+	//}
 
 	//for l := range level {
 	//	fmt.Println("level", l)

@@ -8,14 +8,20 @@ import (
 
 // FMM globals
 var (
-	Root  Cell      // roots the entire FMM tree
-	Level [][]*Cell // for each level of the FMM tree: all cells on that level. Root = level 0
+	Root      Cell        // roots the entire FMM tree
+	Level     [][]*Cell   // for each level of the FMM tree: all cells on that level. Root = level 0
+	Particles []*Particle // all particles, to be manipulated via Root.AddParticle
 
 	// statistics:
 	totalPartners int
 	totalNear     int
 	totalCells    int
 )
+
+func AddParticle(p *Particle) {
+	Root.addParticle(p)
+	Particles = append(Particles, p)
+}
 
 // Initializes the global FMM variables Root, Level
 // with an FMM octree, nLevels deep (8^(nLevels-1)) base cells.
