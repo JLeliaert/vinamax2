@@ -18,33 +18,17 @@ var output_Dt = false
 var output_nrmzpos = false
 var output_mdoth = false
 
-//var timelastswitch =0.//EXTRA
-//var updownswitch =true//EXTRA
 
 //Sets the interval at which times the output table has to be written
 func Output(interval float64) {
 	outputcalled = true
 	f, err = os.Create(outdir + "/table.txt")
 	check(err)
-	//	defer f.Close()
+	defer f.Close()
 	writeheader()
 	outputinterval = interval
 	twrite = interval
 }
-
-//Helemaal extra
-//func plotswitchtime(){
-//	if (updownswitch==true && universe.lijst[0].m[2]<=-0.8){
-//		updownswitch=false
-//		fmt.Println(T-timelastswitch)
-//		timelastswitch=T
-//	}
-//	if (updownswitch ==false && universe.lijst[0].m[2]>=0.8){
-//		updownswitch=true
-//		fmt.Println(T-timelastswitch)
-//		timelastswitch=T
-//	}
-//}
 
 //checks the error
 func check(e error) {
@@ -65,7 +49,6 @@ func averages(lijst []*particle) vector {
 }
 
 //calculates the average moments of all particles
-//TODO weigh with msat
 func averagemoments(lijst []*particle) vector {
 	avgs := vector{0, 0, 0}
 	totalvolume := 0.
@@ -82,6 +65,7 @@ func averagemoments(lijst []*particle) vector {
 }
 
 //calculates the dotproduct of the average moments and the effective field of all particles
+//this equals the losses
 func averagemdoth(lijst []*particle) float64 {
 	avg := 0.
 	for i := range lijst {
@@ -142,14 +126,6 @@ func writeheader() {
 
 }
 
-////prints the suggested timestep for the simulation
-//deprecated, is the responsibility of the user
-//func printsuggestedtimestep() {
-//	shouldbemaxerror := 5e-4
-//	currentmaxerror := maxtauwitht //* Dt
-//	fmt.Println("maxerr=", currentmaxerror)
-//	fmt.Println("A good timestep would be: ", Dt*math.Pow(shouldbemaxerror/currentmaxerror, 1/float64(order)))
-//}
 
 //Adds the field at a specific location to the output table
 func Tableadd_b_at_location(x, y, z float64) {
@@ -162,6 +138,7 @@ func Tableadd_b_at_location(x, y, z float64) {
 }
 
 //Writes the time and the vector of average magnetisation in the table
+//+additional stuff if specified
 func write(avg vector) {
 	if twrite >= outputinterval && outputinterval != 0 {
 		string := fmt.Sprintf("%e\t%v\t%v\t%v", T, avg[0], avg[1], avg[2])
@@ -204,7 +181,7 @@ func write(avg vector) {
 
 //Saves different quantities. At the moment only "geometry" and "m" are possible
 func Save(a string) {
-	//een file openen met unieke naam (counter voor gebruiken)
+	//open file with unique name, used counter
 	name := fmt.Sprintf("%v%06v.txt", a, filecounter)
 	file, error := os.Create(outdir + "/" + name)
 	check(error)
@@ -214,7 +191,7 @@ func Save(a string) {
 
 	case "geometry":
 		{
-			// heel de lijst met particles aflopen en de locatie, straal en msat printen
+			// go through entire list of particles and print their position, radius and msat.
 			header := fmt.Sprintf("#position_x\tposition_y\tposition_z\tradius\tmsat\n")
 			_, err = file.WriteString(header)
 			check(err)
@@ -245,7 +222,7 @@ func Save(a string) {
 	}
 }
 
-//adds a quantity to the output table, at the moment only "B_ext" is possible
+//adds a quantity to the output table
 func Tableadd(a string) {
 	tableaddcalled = true
 	if outputinterval != 0 {
@@ -275,11 +252,6 @@ func Tableadd(a string) {
 		}
 	}
 }
-
-//returns a suggested timestep at the end of the simulation
-//func Suggesttimestep() {
-//	suggest_timestep = true
-//}
 
 func Writeintable(a string) {
 	string := fmt.Sprintf("%v\n", a)
