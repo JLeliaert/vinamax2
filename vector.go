@@ -45,6 +45,13 @@ func (v Vector) Len() float64 {
 	return math.Sqrt(len2)
 }
 
+//sets norm of a vector to one
+func norm(x Vector) { 
+        magnitude := math.Sqrt(x[0]*x[0] + x[1]*x[1] + x[2]*x[2]) 
+        x= x.times(1. / magnitude) 
+}       
+
+
 // Returns the uniform norm of v
 // (maximum of absolute values of components)
 func (v Vector) MaxNorm() float64 {

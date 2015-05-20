@@ -1,4 +1,4 @@
-package vinamax
+package main
 
 import (
 	"log"
@@ -20,16 +20,14 @@ var (
 	Errortolerance float64                                              = 1e-8
 	Thresholdbeta  float64                                              = 0.3 // The threshold value for the FMM
 	demagtime      float64
-	universe       node           // The entire universe of the simulation
+	//universe       node           // The entire universe of the simulation
 	FMM            bool   = false // Calculate demag with FMM method
 	Demag          bool   = true  // Calculate demag
 	demagevery     bool   = false // Calculate demag only after certain interval
 	Adaptivestep   bool   = false
-	outdir         string           // The output directory
 	solver         string = "dopri" // The solver used
 	outputinterval float64
 	maxtauwitht    float64 = 0. //maximum torque during the simulations with temperature
-	//	suggest_timestep bool    = false
 	order       int = 5 //the order of the solver
 	constradius float64
 	logradius_m float64
@@ -78,9 +76,6 @@ func testinput() {
 	if Temp < 0 {
 		log.Fatal("Temp cannot be smaller than 0, did you forget to initialise?")
 	}
-	if universe.number == 0 {
-		log.Fatal("There are no particles in the geometry")
-	}
 }
 
 //checks the inputfiles for functions that should have been called but weren't
@@ -115,13 +110,13 @@ func syntaxrun() {
 	if Brown == true && Adaptivestep == true {
 		log.Fatal("Brown Temperature can only be used with fixed timestep")
 	}
-	if Jumpnoise == true {
-		resetswitchtimes(universe.lijst)
-	}
+	//if Jumpnoise == true {
+	//	resetswitchtimes(universe.lijst)
+	//}
 	if Temp != 0 && Brown == false && Jumpnoise == false {
 		log.Fatal("You have to specify which temperature you want to use: \"Jumpnoise\" or \"Brown\"")
 	}
-	if Brown {
-		calculatetempnumbers(universe.lijst)
-	}
+	//if Brown {
+	//	calculatetempnumbers(universe.lijst)
+	//}
 }
