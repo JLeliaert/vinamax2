@@ -4,6 +4,8 @@ import (
 	"testing"
 )
 
+// Test average field of one spin
+// against 0-order solution from 2015-05-20 (Arne)
 func TestFMM(t *testing.T) {
 
 	NLEVEL := 5
@@ -32,6 +34,7 @@ func TestFMM(t *testing.T) {
 	}
 
 	solution := Vector{5850.136490409946, 4680.109192327974, 3510.08189424605}
+
 	tol := 1e-6
 	if Btotal.Sub(solution).Len() > tol {
 		t.Error("got:", Btotal, "expected:", solution)
