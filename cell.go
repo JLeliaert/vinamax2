@@ -35,7 +35,7 @@ func (c *Cell) addParticle(p *Particle) {
 
 // is position x inside cell?
 func (c *Cell) contains(x Vector) bool {
-	size := c.size
+	size := c.size.Div(2)
 	d := x.Sub(c.center).Abs()
 	return d[X] <= size[X] && d[Y] <= size[Y] && d[Z] <= size[Z]
 }
