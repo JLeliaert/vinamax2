@@ -7,7 +7,7 @@ import (
 )
 
 func calculatedemag(){
-Root.UpdateB(nil)
+CalcDemag()
 }
 //Set the solver to use, "euler" or "heun"
 func Setsolver(a string) {
