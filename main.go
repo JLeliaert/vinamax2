@@ -6,31 +6,14 @@ import (
 	"math"
 )
 
-var (
-	root  Cell      // roots the entire FMM tree
-	level [][]*Cell // for each level of the FMM tree: all cells on that level. Root = level 0
-
-	// statistics:
-	totalPartners int
-	totalNear     int
-	totalCells    int
-)
-
 func main() {
 
 	NLEVEL := 5
-	level = make([][]*Cell, NLEVEL)
-	root = Cell{size: Vector{1, 1, 1}}
 
-	log.Println("dividing")
-	root.Divide(NLEVEL)
-
-	log.Println("finding partners")
-	root.FindPartners(level[0])
-	printStats()
+	InitFMM(NLEVEL)
 
 	// place particles with m=0 , as field probes
-	baseLevel := level[NLEVEL-1]
+	baseLevel := Level[NLEVEL-1]
 	for _, c := range baseLevel {
 		c.particle = []*Particle{&Particle{m: Vector{0, 0, 0}, center: c.center}}
 	}
@@ -40,8 +23,8 @@ func main() {
 	hotcell.particle = []*Particle{&Particle{m: Vector{1, 0, 0}, center: hotcell.center}}
 
 	// calc B demag
-	root.UpdateM()
-	root.UpdateB(nil)
+	Root.UpdateM()
+	Root.UpdateB(nil)
 
 	// output one layer
 	for _, c := range baseLevel {
@@ -65,7 +48,7 @@ func main() {
 }
 
 func printStats() {
-	nLeaf := int(math.Pow(8, float64(len(level)-1)) + 0.5)
+	nLeaf := int(math.Pow(8, float64(len(Level)-1)) + 0.5)
 	log.Println(totalCells, "cells, avg", totalPartners/totalCells, "partners/cell, avg", totalNear/nLeaf, "near/leaf")
 }
 

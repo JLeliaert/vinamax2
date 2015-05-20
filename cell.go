@@ -157,8 +157,8 @@ func IsFar(a, b *Cell) bool {
 func (c *Cell) Divide(nLevels int) {
 
 	// add to global level array
-	myLevel := len(level) - nLevels
-	level[myLevel] = append(level[myLevel], c)
+	myLevel := len(Level) - nLevels
+	Level[myLevel] = append(Level[myLevel], c)
 	totalCells++
 
 	if nLevels == 1 {
