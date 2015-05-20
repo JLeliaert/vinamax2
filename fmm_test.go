@@ -8,9 +8,10 @@ import (
 // against 0-order solution from 2015-05-20 (Arne)
 func TestFMM(t *testing.T) {
 
+	worldSize := Vector{1, 1, 1}
 	NLEVEL := 5
 
-	InitFMM(NLEVEL)
+	InitFMM(worldSize, NLEVEL)
 
 	// place particles with m=0 , as field probes
 	baseLevel := Level[NLEVEL-1]

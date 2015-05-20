@@ -32,9 +32,9 @@ func CalcDemag() {
 
 // Initializes the global FMM variables Root, Level
 // with an FMM octree, nLevels deep (8^(nLevels-1)) base cells.
-func InitFMM(nLevels int) {
+func InitFMM(worldSize Vector, nLevels int) {
 	Level = make([][]*Cell, nLevels)
-	Root = Cell{size: Vector{1, 1, 1}}
+	Root = Cell{size: worldSize}
 
 	start := time.Now()
 	log.Println("dividing", nLevels, "levels", math.Pow(8, float64(nLevels-1)), "base cells...")
