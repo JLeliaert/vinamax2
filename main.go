@@ -1,11 +1,18 @@
-package vinamax2
+// +build ignore
+
+package main
 
 import (
+	"flag"
 	"fmt"
 	"math"
 )
 
 func main() {
+
+	flag.Parse()
+
+	defer Cleanup()
 
 	worldSize := Vector{1, 1, 1}
 	NLEVEL := 5
