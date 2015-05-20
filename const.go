@@ -18,6 +18,8 @@ const (
 	qe     = 1.60217646E-19     // Electron charge in C
 )
 
+var outdir string // TODO: move to io.go
+
 func init() {
 
 	fmt.Println(`
@@ -59,5 +61,7 @@ contact: jonathan.leliaert@gmail.com
 		})
 	}
 
-	check(err3)
+	if err3 != nil {
+		panic(err3)
+	}
 }
