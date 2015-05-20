@@ -1,7 +1,7 @@
-package main
+package vinamax2
 
 import (
-	"fmt"
+//	"fmt"
 	"log"
 	"math"
 )
@@ -72,12 +72,12 @@ func Run(time float64) {
 	gammaoveralpha = gamma0 / (1. + (Alpha * Alpha))
 	testinput()
 	syntaxrun()
-	for i := range universe.lijst {
-		norm(universe.lijst[i].M)
+	for i := range Particles {
+		norm(Particles[i].M)
 	}
-	write(averagemoments(universe.lijst))
+	write(averagemoments(Particles))
 	//averages is not weighted with volume, averagemoments is
-	//write(averages(universe.lijst))
+	//write(averages(Particles))
 	previousdemagcalc := T - demagtime
 	for j := T; T < j+time; {
 		if (demagevery == true) && (T-previousdemagcalc >= demagtime) {
@@ -90,37 +90,37 @@ func Run(time float64) {
 		switch solver {
 		case "heun":
 			{
-				heunstep(universe.lijst)
+				heunstep(Particles)
 				T += Dt
 			}
 		case "euler":
 			{
-				eulerstep(universe.lijst)
+				eulerstep(Particles)
 				T += Dt
 			}
 		case "rk3":
 			{
-				rk3step(universe.lijst)
+				rk3step(Particles)
 				T += Dt
 			}
 		case "annelies":
 			{
-				anneliesstep(universe.lijst)
+				anneliesstep(Particles)
 				T += Dt
 			}
 		case "rk4":
 			{
-				rk4step(universe.lijst)
+				rk4step(Particles)
 				T += Dt
 			}
 		case "dopri":
 			{
-				dopristep(universe.lijst)
+				dopristep(Particles)
 				T += Dt
 				//fmt.Println(Dt)
 				if Adaptivestep {
 					if maxtauwitht > Errortolerance {
-						undobadstep(universe.lijst)
+						undobadstep(Particles)
 						if Dt == Mindt {
 							log.Fatal("mindt is too small for your specified error tolerance")
 						}
@@ -139,11 +139,11 @@ func Run(time float64) {
 			}
 		case "fehl56":
 			{
-				fehl56step(universe.lijst)
+				fehl56step(Particles)
 				T += Dt
 				if Adaptivestep {
 					if maxtauwitht > Errortolerance {
-						undobadstep(universe.lijst)
+						undobadstep(Particles)
 						if Dt == Mindt {
 							log.Fatal("mindt is too small for your specified error tolerance")
 						}
@@ -163,11 +163,11 @@ func Run(time float64) {
 			}
 		case "fehl67":
 			{
-				fehl67step(universe.lijst)
+				fehl67step(Particles)
 				T += Dt
 				if Adaptivestep {
 					if maxtauwitht > Errortolerance {
-						undobadstep(universe.lijst)
+						undobadstep(Particles)
 						if Dt == Mindt {
 							log.Fatal("mindt is too small for your specified error tolerance")
 						}
@@ -193,14 +193,14 @@ func Run(time float64) {
 		}
 
 		//	plotswitchtime()//EXTRA
-		if Jumpnoise {
-			checkallswitch(universe.lijst)
-		}
+//		if Jumpnoise {
+//			checkallswitch(Particles)
+//		}
 		//fmt.Println(Dt)
-		//write(averages(universe.lijst))
-		write(averagemoments(universe.lijst))
+		//write(averages(Particles))
+		write(averagemoments(Particles))
 		if (T > j+time-Dt) && (T < j+time) {
-			//undobadstep(universe.lijst)
+			//undobadstep(Particles)
 			Dt = j + time - T + 1e-15
 		}
 	}

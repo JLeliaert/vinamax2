@@ -15,6 +15,7 @@ type Particle struct {
 	heff      Vector //effective field
 	tempfield Vector //thermal field
 	tempm     Vector //temporary magnetisation
+	tempnumber float64 // prefactor for thermal field
 	previousm Vector //previous magnetisation
 	k1        Vector
 	k2        Vector
