@@ -1,7 +1,6 @@
 package vinamax2
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -19,7 +18,7 @@ func TestFMM(t *testing.T) {
 
 	// place one magneticed particle as source
 	hotcell := baseLevel[0]
-	hotcell.particle = []*Particle{&Particle{M: Vector{1, 0, 0}, center: hotcell.center}}
+	hotcell.particle = []*Particle{&Particle{M: Vector{1, 2, 3}, center: hotcell.center}}
 
 	// calc B demag
 	Root.UpdateM()
@@ -32,6 +31,10 @@ func TestFMM(t *testing.T) {
 		}
 	}
 
-	fmt.Println(Btotal)
+	solution := Vector{5850.136490409946, 4680.109192327974, 3510.08189424605}
+	tol := 1e-6
+	if Btotal.Sub(solution).Len() > tol {
+		t.Error("got:", Btotal, "expected:", solution)
+	}
 
 }
