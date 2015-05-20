@@ -5,7 +5,6 @@ package main
 import (
 	. "."
 	"flag"
-	"fmt"
 	"math"
 )
 
@@ -37,16 +36,18 @@ func main() {
 	hotcell := baseLevel[0]
 	AddParticle(NewParticle(hotcell.Center(), Vector{1, 2, 3}))
 
-	CalcDemag()
-
-	// output one layer
-	for _, p := range Particles {
-		r := p.Center()
-		b := p.Bdemag().Div(p.Bdemag().Len()).Mul(1. / 16.) // normalize
-		if r[Z] == -0.46875 {
-			fmt.Println(r[X], r[Y], r[Z], b[X], b[Y], b[Z])
-		}
+	for i := 0; i < 500; i++ {
+		CalcDemag()
 	}
+
+	//// output one layer
+	//for _, p := range Particles {
+	//	r := p.Center()
+	//	b := p.Bdemag().Div(p.Bdemag().Len()).Mul(1. / 16.) // normalize
+	//	if r[Z] == -0.46875 {
+	//		fmt.Println(r[X], r[Y], r[Z], b[X], b[Y], b[Z])
+	//	}
+	//}
 
 }
 
