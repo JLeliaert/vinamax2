@@ -4,6 +4,7 @@ package vinamax2
 
 import (
 	"fmt"
+	"log"
 	"math"
 	"os"
 	"path/filepath"
@@ -22,7 +23,7 @@ var outdir string // TODO: move to io.go
 
 func init() {
 
-	fmt.Println(`
+	log.Println(`
 vinamax: a macrospin model to simulate magnetic nanoparticles
 Copyright (C) 2013  Jonathan Leliaert
 
