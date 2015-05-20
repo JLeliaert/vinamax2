@@ -44,7 +44,7 @@ contact: jonathan.leliaert@gmail.com
 	//Initialise the outputdir
 
 	fname := os.Args[0]
-	f2name := strings.Split(fname, "/")
+	f2name := strings.Split(fname, "/") // TODO: use path.Split?
 	outdir = fmt.Sprint(f2name[len(f2name)-1], ".out")
 	os.Mkdir(outdir, 0775)
 	f, err3 := os.Open(outdir)
