@@ -22,8 +22,7 @@ func main() {
 	AddParticle(&Particle{M: Vector{1, 0, 0}, center: hotcell.center})
 
 	// calc B demag
-	Root.UpdateM()
-	Root.UpdateB(nil)
+	CalcDemag()
 
 	// output one layer
 	//for _, p := range Particles {

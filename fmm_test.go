@@ -22,9 +22,7 @@ func TestFMM(t *testing.T) {
 	hotcell := baseLevel[0]
 	AddParticle(&Particle{M: Vector{1, 2, 3}, center: hotcell.center})
 
-	// calc B demag
-	Root.UpdateM()
-	Root.UpdateB(nil)
+	CalcDemag()
 
 	var Btotal Vector
 	for _, p := range Particles {

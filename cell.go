@@ -15,6 +15,8 @@ type Cell struct {
 	particles        []*Particle // If I'm a leaf cell, particles inside me (nil otherwise)
 }
 
+// find the leaf cell enclosing Particle p and add
+// p to that cell. Called by AddParticle.
 func (c *Cell) addParticle(p *Particle) {
 	if c.IsLeaf() {
 		if !c.contains(p.center) {
@@ -34,13 +36,16 @@ func (c *Cell) addParticle(p *Particle) {
 }
 
 // is position x inside cell?
+// used by AddParticle
 func (c *Cell) contains(x Vector) bool {
 	size := c.size.Div(2)
 	d := x.Sub(c.center).Abs()
 	return d[X] <= size[X] && d[Y] <= size[Y] && d[Z] <= size[Z]
 }
 
-func (c *Cell) UpdateB(parent *Cell) {
+// Recursively calculate magnetostatic field via the FMM method.
+// Precondition: Root.updateM() has been called.
+func (c *Cell) updateBdemag(parent *Cell) {
 	if c == nil {
 		return
 	}
@@ -75,7 +80,7 @@ func (c *Cell) UpdateB(parent *Cell) {
 	// if !leaf:
 	// propagete field to children
 	for _, ch := range c.child {
-		ch.UpdateB(c)
+		ch.updateBdemag(c)
 	}
 
 	// if leaf cell:
@@ -101,7 +106,7 @@ func (c *Cell) UpdateB(parent *Cell) {
 
 // recursively update this cell's m as the sum
 // of its children's m.
-func (c *Cell) UpdateM() {
+func (c *Cell) updateM() {
 	c.m = Vector{0, 0, 0}
 
 	// leaf node: sum particle m's.
@@ -115,7 +120,7 @@ func (c *Cell) UpdateM() {
 	// non-leaf: update children, then add to me.
 	for _, ch := range c.child {
 		if ch != nil {
-			ch.UpdateM()
+			ch.updateM()
 			c.m = c.m.Add(ch.m)
 		}
 	}

@@ -18,9 +18,16 @@ var (
 	totalCells    int
 )
 
+// Add a particle to the global FMM tree and Particles list
 func AddParticle(p *Particle) {
 	Root.addParticle(p)
 	Particles = append(Particles, p)
+}
+
+// Calculates the magnetostatic field of all Particles.
+func CalcDemag() {
+	Root.updateM()
+	Root.updateBdemag(nil)
 }
 
 // Initializes the global FMM variables Root, Level
