@@ -1,4 +1,4 @@
-package main
+package vinamax2
 
 type Particle struct {
 	M       Vector  // magnetization

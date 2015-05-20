@@ -1,11 +1,5 @@
-//package vinamax
-//
-//import (
-//	//		"fmt"
-//	"log"
-//	"math"
-//)
-//
+package vinamax2
+
 ////Set the solver to use, "euler" or "heun"
 //func Setsolver(a string) {
 //	switch a {

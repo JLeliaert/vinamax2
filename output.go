@@ -1,5 +1,5 @@
 //Contains function to control the output of the program
-package main
+package vinamax2
 
 import ()
 

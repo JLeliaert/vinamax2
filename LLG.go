@@ -1,4 +1,4 @@
-package main
+package vinamax2
 
 //Calculates the torque working on the magnetisation of a particle
 //using the Landau Lifshitz equation

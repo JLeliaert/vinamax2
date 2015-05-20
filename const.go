@@ -1,6 +1,6 @@
 //This file contains all the constants and init files
 
-package main
+package vinamax2
 
 import (
 	"fmt"
