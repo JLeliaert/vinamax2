@@ -9,9 +9,8 @@
 
 # Runs gofmt on the code and stops commit if files were affected.
 # 
-fail=0;
+
 
 if (gofmt -w -l */*.go */*/*.go | grep \.go); then exit 1; fi;
 go test
 
-exit 0

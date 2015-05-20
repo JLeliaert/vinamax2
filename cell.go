@@ -65,7 +65,7 @@ func (c *Cell) UpdateB(parent *Cell) {
 			for _, src := range n.particle {
 				r := dst.center.Sub(src.center)
 				if r.Dot(r) != 0 { // exclude self
-					B := DipoleField(src.m, r)
+					B := DipoleField(src.M, r)
 					dst.b = dst.b.Add(B)
 				}
 			}
@@ -82,7 +82,7 @@ func (c *Cell) UpdateM() {
 	// leaf node: sum particle m's.
 	if c.particle != nil {
 		for _, p := range c.particle {
-			c.m = c.m.Add(p.m)
+			c.m = c.m.Add(p.M)
 		}
 		return
 	}
