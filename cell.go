@@ -73,8 +73,11 @@ func (c *Cell) updateBdemag(parent *Cell) {
 		}
 		B := DipoleField(p.m, r)
 		c.b0 = c.b0.Add(B)
-		//c.bx.add(derivative of B)
-		// ..
+
+		c.dbdx = c.dbdx.Add(DiffDipole(X, p.m, r))
+		c.dbdy = c.dbdy.Add(DiffDipole(Y, p.m, r))
+		c.dbdz = c.dbdz.Add(DiffDipole(Z, p.m, r))
+
 	}
 
 	// if !leaf:
