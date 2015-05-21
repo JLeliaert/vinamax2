@@ -2,15 +2,19 @@ package vinamax2
 
 import "math"
 
+var NEvals int
+
 // Field generated at position R relative to dipole m
 func DipoleField(m, R Vector) Vector {
 
-	r := R.Len()
-	r2 := r * r
+	NEvals++
+
+	r2 := R[X]*R[X] + R[Y]*R[Y] + R[Z]*R[Z]
+	r := math.Sqrt(r2)
 	r3 := r * r2
 	r5 := r3 * r2
 
-	return R.Mul(3 * m.Dot(R) / r5).Sub(m.Div(r3)).Div(4 * math.Pi)
+	return R.Mul(3 * m.Dot(R) / r5).Sub(m.Mul(1 / r3)).Mul(1 / (4 * math.Pi))
 
 }
 

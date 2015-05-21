@@ -46,6 +46,9 @@ func main() {
 	M := Vector{1, 2, 3}
 	AddParticle(NewParticle(hotcell.Center(), r, M, msat))
 
+	CalcDemag()
+	Log("#Dipole evaluations:", NEvals)
+
 	for i := 0; i < 500; i++ {
 		CalcDemag()
 	}
