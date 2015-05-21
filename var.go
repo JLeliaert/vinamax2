@@ -28,10 +28,10 @@ var (
 	solver         string = "dopri" // The solver used
 	outputinterval float64
 	maxtauwitht    float64 = 0. //maximum torque during the simulations with temperature
-	order       int = 5 //the order of the solver
-	constradius float64
-	logradius_m float64
-	logradius_s float64
+	order          int     = 5  //the order of the solver
+	constradius    float64
+	logradius_m    float64
+	logradius_s    float64
 
 	msatcalled          bool = false
 	radiuscalled        bool = false
@@ -119,4 +119,15 @@ func syntaxrun() {
 	//if Brown {
 	//	calculatetempnumbers(universe.lijst)
 	//}
+}
+
+//Sets the radius of all entries in radii to a constant value
+func Particle_radius(x float64) {
+	radiuscalled = true
+	constradiuscalled = true
+
+	if x < 0 {
+		log.Fatal("particles can't have a negative radius")
+	}
+	constradius = x
 }

@@ -8,25 +8,35 @@
 package main
 
 import (
-	. "github.com/JLeliaert/vinamax2"
+	. ".."
 )
 
 func main() {
 
-	World(0, 0, 0, 2e-6)
+	worldsize := 2e-6
+	nLevels := 5
+	InitFMM(Vector{worldsize, worldsize, worldsize}, nLevels)
 
-	Particle_radius(16e-9)
+	r := 16e-9
+	Particle_radius(r)
 
-	Addsingleparticle(-64.48e-9, 0, 0)
-	Addsingleparticle(64.48e-9, 0, 0)
+	M := Vector{0, 1, 0}
+
+	msat := 860e3
+	Msat(msat)
+	p1 := NewParticle(Vector{-64.48e-9, 0, 0}, r, M, msat)
+	p2 := NewParticle(Vector{64.48e-9, 0, 0}, r, M, msat)
+
+	AddParticle(p1)
+	AddParticle(p2)
 
 	B_ext = func(t float64) (float64, float64, float64) { return 0.001, 0., 0.0 }
 
-	FMM = true
-	Demag = true
-
-	//set the saturation magnetisation of the particles
-	Msat(860e3)
+	//	FMM = true
+	//	Demag = true
+	//
+	//	//set the saturation magnetisation of the particles
+	//	Msat()
 
 	Dt = 1e-12
 	T = 0.
@@ -34,8 +44,6 @@ func main() {
 	Alpha = 0.1
 	Ku1 = 0
 	Anisotropy_axis(0, 0, 1)
-
-	M_uniform(0, 1, 0)
 
 	Output(1e-10)
 

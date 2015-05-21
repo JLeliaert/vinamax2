@@ -37,8 +37,8 @@ type Particle struct {
 	k13        Vector
 }
 
-func NewParticle(center, M Vector) *Particle {
-	return &Particle{center: center, M: M}
+func NewParticle(center Vector, radius float64, M Vector, Msat float64) *Particle {
+	return &Particle{center: center, M: M, r: radius, msat: Msat}
 }
 
 //print position and magnetisation of a particle
