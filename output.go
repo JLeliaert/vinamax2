@@ -53,11 +53,11 @@ func initOutput() {
 }
 
 // write to table (outputFile)
-func writeTable(msg ...interface{}) {
+func writeTable(format string, msg ...interface{}) {
 	if outputFile == nil {
 		initOutput()
 	}
-	_, err := fmt.Fprint(outputFile, msg...)
+	_, err := fmt.Fprintf(outputFile, format, msg...)
 	check(err)
 }
 
