@@ -185,7 +185,7 @@ func write(avg Vector) {
 			writeTable("\t%v", i)
 		}
 		writeTable("\n")
-		twrite = -Dt
+		twrite = Dt
 	}
 	twrite += Dt
 }
