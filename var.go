@@ -1,9 +1,5 @@
 package vinamax2
 
-import (
-	"log"
-)
-
 var (
 	//These variables can be set in the input files
 	B_ext          func(t float64) (float64, float64, float64)                  // External applied field in T
@@ -65,22 +61,22 @@ func Demagevery(t float64) {
 //test the inputvalues for unnatural things
 func testinput() {
 	if Demag == true && demagevery == true {
-		log.Fatal("You cannot call both Demagevery and Demag, pick one")
+		Fatal("You cannot call both Demagevery and Demag, pick one")
 	}
 	if Dt < 0 {
-		log.Fatal("Dt cannot be smaller than 0, did you forget to initialise?")
+		Fatal("Dt cannot be smaller than 0, did you forget to initialise?")
 	}
 	if Alpha < 0 {
-		log.Fatal("Alpha cannot be smaller than 0, did you forget to initialise?")
+		Fatal("Alpha cannot be smaller than 0, did you forget to initialise?")
 	}
 	if Temp < 0 {
-		log.Fatal("Temp cannot be smaller than 0, did you forget to initialise?")
+		Fatal("Temp cannot be smaller than 0, did you forget to initialise?")
 	}
 }
 
 //checks the inputfiles for functions that should have been called but weren't
 func syntaxrun() {
-	log.Println("TODO: call syntaxrun()!")
+	Log("TODO: call syntaxrun()!")
 	// if msatcalled == false {
 	// 	log.Fatal("You have to specify msat")
 	// }
@@ -128,7 +124,7 @@ func Particle_radius(x float64) {
 	constradiuscalled = true
 
 	if x < 0 {
-		log.Fatal("particles can't have a negative radius")
+		Fatal("particles can't have a negative radius")
 	}
 	constradius = x
 }

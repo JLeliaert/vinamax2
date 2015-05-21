@@ -8,6 +8,8 @@ import (
 	"runtime"
 )
 
+var verbose bool = true
+
 // Remove extension from file name.
 func NoExt(file string) string {
 	ext := path.Ext(file)
@@ -22,6 +24,10 @@ func FatalErr(err interface{}) {
 	}
 }
 
+func Fatal(msg ...interface{}) {
+	log.Fatal(msg...)
+}
+
 // Panics if err is not nil. Signals a bug.
 func PanicErr(err error) {
 	if err != nil {
@@ -30,7 +36,9 @@ func PanicErr(err error) {
 }
 
 func Log(msg ...interface{}) {
-	log.Println(msg...)
+	if verbose {
+		log.Println(msg...)
+	}
 }
 
 // Logs the error of non-nil, plus message

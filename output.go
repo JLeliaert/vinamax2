@@ -4,7 +4,6 @@ package vinamax2
 //
 import (
 	"fmt"
-	"log"
 	"math"
 	"os"
 	"path/filepath"
@@ -154,7 +153,7 @@ func writeheader() {
 func Tableadd_b_at_location(x, y, z float64) {
 	tableaddcalled = true
 	if outputinterval != 0 {
-		log.Fatal("Output() should always come AFTER Tableadd_b_at_location()")
+		Fatal("Output() should always come AFTER Tableadd_b_at_location()")
 	}
 	locations = append(locations, Vector{x, y, z})
 
@@ -228,7 +227,7 @@ func Save(a string) {
 		}
 	default:
 		{
-			log.Fatal(a, " is not a quantitity that can be saved")
+			Fatal(a, " is not a quantitity that can be saved")
 		}
 	}
 }
@@ -237,7 +236,7 @@ func Save(a string) {
 func Tableadd(a string) {
 	tableaddcalled = true
 	if outputinterval != 0 {
-		log.Fatal("Output() should always come AFTER Tableadd()")
+		Fatal("Output() should always come AFTER Tableadd()")
 	}
 	switch a {
 	case "B_ext":
@@ -259,7 +258,7 @@ func Tableadd(a string) {
 
 	default:
 		{
-			log.Fatal(a, " is currently not addable to table")
+			Fatal(a, " is currently not addable to table")
 		}
 	}
 }

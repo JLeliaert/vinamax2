@@ -1,7 +1,6 @@
 package vinamax2
 
 import (
-	"log"
 	"math"
 	"time"
 )
@@ -37,19 +36,19 @@ func InitFMM(worldSize Vector, nLevels int) {
 	Root = Cell{size: worldSize}
 
 	start := time.Now()
-	log.Println("dividing", nLevels, "levels", math.Pow(8, float64(nLevels-1)), "base cells...")
+	Log("dividing", nLevels, "levels", math.Pow(8, float64(nLevels-1)), "base cells...")
 	Root.Divide(nLevels)
-	log.Println(time.Since(start))
+	Log(time.Since(start))
 
 	start = time.Now()
-	log.Println("finding partners...")
+	Log("finding partners...")
 	Root.FindPartners(Level[0])
-	log.Println(time.Since(start))
+	Log(time.Since(start))
 
 	printFMMStats()
 }
 
 func printFMMStats() {
 	nLeaf := int(math.Pow(8, float64(len(Level)-1)) + 0.5)
-	log.Println(totalCells, "cells, avg", totalPartners/totalCells, "partners/cell, avg", totalNear/nLeaf, "near/leaf")
+	Log(totalCells, "cells, avg", totalPartners/totalCells, "partners/cell, avg", totalNear/nLeaf, "near/leaf")
 }

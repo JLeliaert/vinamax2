@@ -2,7 +2,6 @@ package vinamax2
 
 import (
 	//	"fmt"
-	"log"
 	"math"
 )
 
@@ -62,7 +61,7 @@ func Setsolver(a string) {
 		}
 	default:
 		{
-			log.Fatal(a, " is not a possible solver, \"euler\" or \"heun\" or \"rk3\"or \"rk4\"or \"dopri\"or \"fehl56\"or \"fehl67\"")
+			Fatal(a, " is not a possible solver, \"euler\" or \"heun\" or \"rk3\"or \"rk4\"or \"dopri\"or \"fehl56\"or \"fehl67\"")
 		}
 	}
 }
@@ -123,7 +122,7 @@ func Run(time float64) {
 					if maxtauwitht > Errortolerance {
 						undobadstep(Particles)
 						if Dt == Mindt {
-							log.Fatal("mindt is too small for your specified error tolerance")
+							Fatal("mindt is too small for your specified error tolerance")
 						}
 					}
 
@@ -146,7 +145,7 @@ func Run(time float64) {
 					if maxtauwitht > Errortolerance {
 						undobadstep(Particles)
 						if Dt == Mindt {
-							log.Fatal("mindt is too small for your specified error tolerance")
+							Fatal("mindt is too small for your specified error tolerance")
 						}
 
 					}
@@ -170,7 +169,7 @@ func Run(time float64) {
 					if maxtauwitht > Errortolerance {
 						undobadstep(Particles)
 						if Dt == Mindt {
-							log.Fatal("mindt is too small for your specified error tolerance")
+							Fatal("mindt is too small for your specified error tolerance")
 						}
 
 					}

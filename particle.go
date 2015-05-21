@@ -2,7 +2,6 @@ package vinamax2
 
 import (
 	"fmt"
-	"log"
 	"math"
 )
 
@@ -78,7 +77,7 @@ func C2anisotropy_axis(x, y, z float64) {
 			norm(b)
 			Particles[i].c3_anis = b
 		} else {
-			log.Fatal("c1 and c2 should be orthogonal")
+			Fatal("c1 and c2 should be orthogonal")
 		}
 	}
 }

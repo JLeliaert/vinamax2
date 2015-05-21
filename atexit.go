@@ -1,7 +1,5 @@
 package vinamax2
 
-import "log"
-
 // Functions to be called at program exit
 var atexit []func()
 
@@ -13,7 +11,7 @@ func AtExit(cleanup func()) {
 // Runs all functions stacked by AtExit().
 func Cleanup() {
 	if len(atexit) != 0 {
-		log.Println("stopping profiler")
+		Log("stopping profiler")
 	}
 	for _, f := range atexit {
 		f()
