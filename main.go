@@ -10,7 +10,8 @@ import (
 )
 
 var (
-	flagProf = flag.Bool("prof", false, "turn on CPU profiling")
+	flagProf    = flag.Bool("prof", false, "turn on CPU profiling")
+	flagMemProf = flag.Bool("memprof", false, "turn on memory profiling")
 )
 
 func main() {
@@ -20,6 +21,9 @@ func main() {
 
 	if *flagProf {
 		InitCPUProfile()
+	}
+	if *flagMemProf {
+		InitMemProfile()
 	}
 
 	worldSize := Vector{1, 1, 1}
