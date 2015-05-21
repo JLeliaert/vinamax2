@@ -9,13 +9,19 @@ func DipoleField(m, R Vector) Vector {
 
 	NEvals++
 
-	r2 := R[X]*R[X] + R[Y]*R[Y] + R[Z]*R[Z]
-	r := math.Sqrt(r2)
-	r3 := r * r2
-	r5 := r3 * r2
+	i_r2 := 1 / (R[X]*R[X] + R[Y]*R[Y] + R[Z]*R[Z])
+	i_r := math.Sqrt(i_r2)
+	i_r3 := i_r * i_r2
+	i3_r5 := 3 * i_r3 * i_r2
 
-	return R.Mul(3 * m.Dot(R) / r5).Sub(m.Mul(1 / r3)).Mul(1 / (4 * math.Pi))
+	m_R := m.Dot(R)
 
+	// TODO: use vectors
+	Bx := (1 / (4 * math.Pi)) * ((i3_r5 * m_R * R[X]) - (i_r3 * m[X]))
+	By := (1 / (4 * math.Pi)) * ((i3_r5 * m_R * R[Y]) - (i_r3 * m[Y]))
+	Bz := (1 / (4 * math.Pi)) * ((i3_r5 * m_R * R[Z]) - (i_r3 * m[Z]))
+
+	return Vector{Bx, By, Bz}
 }
 
 // Partial derivative (dB/di) of field generated at position R relative to dipole m.
