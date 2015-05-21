@@ -50,9 +50,9 @@ func (c *Cell) updateBdemag(parent *Cell) {
 		return
 	}
 
-	// propagete parent field expansion to this cell,
+	// propagate parent field expansion to this cell,
 	// (applies shift to Taylor expansion)
-	sh := c.center.Sub(parent.center)
+	sh := parent.center.Sub(c.center)
 	c.b0 = parent.b0.MAdd(sh[X], parent.dbdx).MAdd(sh[Y], parent.dbdy).MAdd(sh[Z], parent.dbdz)
 	c.dbdx = parent.dbdx
 	c.dbdy = parent.dbdy
@@ -74,9 +74,8 @@ func (c *Cell) updateBdemag(parent *Cell) {
 func (c *Cell) addPartnerFields() {
 	for _, p := range c.partner {
 		r := c.center.Sub(p.center)
-		B := DipoleField(p.m, r)
-		c.b0 = c.b0.Add(B)
 
+		c.b0 = c.b0.Add(DipoleField(p.m, r))
 		c.dbdx = c.dbdx.Add(DiffDipole(X, p.m, r))
 		c.dbdy = c.dbdy.Add(DiffDipole(Y, p.m, r))
 		c.dbdz = c.dbdz.Add(DiffDipole(Z, p.m, r))
@@ -178,7 +177,7 @@ func (c *Cell) IsLeaf() bool {
 func IsFar(a, b *Cell) bool {
 	// TODO: this is more or less a touch criterion: improve!
 	dist := a.center.Sub(b.center).Len()
-	return dist > 1.1*a.size.Len()
+	return dist > 2*a.size.Len() // TODO
 }
 
 // Create child cells to reach nLevels of levels and add to global level array.
