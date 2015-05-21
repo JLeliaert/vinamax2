@@ -164,31 +164,25 @@ func Tableadd_b_at_location(x, y, z float64) {
 //+additional stuff if specified
 func write(avg Vector) {
 	if twrite >= outputinterval && outputinterval != 0 {
-		string := fmt.Sprintf("%e\t%v\t%v\t%v", T, avg[0], avg[1], avg[2])
-		writeTable(string)
+		writeTable("%e\t%v\t%v\t%v", T, avg[0], avg[1], avg[2])
 
 		if output_B_ext {
 			B_ext_x, B_ext_y, B_ext_z := B_ext(T)
-			string = fmt.Sprintf("\t%v\t%v\t%v", B_ext_x, B_ext_y, B_ext_z)
-			writeTable(string)
+			writeTable("\t%v\t%v\t%v", B_ext_x, B_ext_y, B_ext_z)
 		}
 		if output_Dt {
-			string = fmt.Sprintf("\t%v", Dt)
-			writeTable(string)
+			writeTable("\t%v", Dt)
 		}
 		if output_nrmzpos {
-			string = fmt.Sprintf("\t%v", nrmzpositive(Particles))
-			writeTable(string)
+			writeTable("\t%v", nrmzpositive(Particles))
 		}
 		if output_mdoth {
-			string = fmt.Sprintf("\t%v", averagemdoth(Particles))
-			writeTable(string)
+			writeTable("\t%v", averagemdoth(Particles))
 		}
 		for i := range locations {
 
 			//TODO	string = fmt.Sprintf("\t%v\t%v\t%v", (demag(locations[i][0], locations[i][1], locations[i][2])[0]), (demag(locations[i][0], locations[i][1], locations[i][2])[1]), (demag(locations[i][0], locations[i][1], locations[i][2])[2]))
-			string = fmt.Sprintf("\t%v", i)
-			writeTable(string)
+			writeTable("\t%v", i)
 		}
 		writeTable("\n")
 		twrite = 0.
