@@ -254,23 +254,16 @@ func heunstep(Lijst []*Particle) {
 		//temp := p.temp()
 		tau2 := p.tau(temp)
 		tau1 := p.k1
-		p.M[0] += ((-tau1[0] + tau2[0]) * 0.5 * Dt)
-		p.M[1] += ((-tau1[1] + tau2[1]) * 0.5 * Dt)
-		p.M[2] += ((-tau1[2] + tau2[2]) * 0.5 * Dt)
+		p.M = p.M.MAdd(-Dt*0.5,tau1).MAdd(Dt*0.5,tau2)
+
+		//p.M[0] += ((-tau1[0] + tau2[0]) * 0.5 * Dt)
+		//p.M[1] += ((-tau1[1] + tau2[1]) * 0.5 * Dt)
+		//p.M[2] += ((-tau1[2] + tau2[2]) * 0.5 * Dt)
 
 		norm(p.M)
 
-		//	if suggest_timestep {
-		//		taux := (-tau1[0] + tau2[0]) * 0.5
-		//		tauy := (-tau1[1] + tau2[1]) * 0.5
-		//		tauz := (-tau1[2] + tau2[2]) * 0.5
-		//		torq := math.Sqrt(taux*taux + tauy*tauy + tauz*tauz)
-		//		if torq > maxtauwitht {
-		//			maxtauwitht = torq
-		//		}
-		//	}
 		T -= Dt
-		//if you have to save mdotH
+		//when saving  mdotH
 		p.heff = p.b_eff(temp)
 
 	}
@@ -283,13 +276,13 @@ func rk3step(Lijst []*Particle) {
 	for _, p := range Lijst {
 		temp := p.temp()
 		p.tempfield = temp
-		tau0 := p.tau(temp)
-		p.k1 = tau0
+		p.k1 = p.tau(temp)
 
 		//k1
-		p.M[0] += tau0[0] * 1 / 2. * Dt
-		p.M[1] += tau0[1] * 1 / 2. * Dt
-		p.M[2] += tau0[2] * 1 / 2. * Dt
+		p.M = p.M.MAdd(0.5*Dt,p.k1)
+		//p.M[0] += tau0[0] * 1 / 2. * Dt
+		//p.M[1] += tau0[1] * 1 / 2. * Dt
+		//p.M[2] += tau0[2] * 1 / 2. * Dt
 		T += 1 / 2. * Dt
 	}
 
@@ -299,12 +292,12 @@ func rk3step(Lijst []*Particle) {
 
 	for _, p := range Lijst {
 		temp := p.tempfield
-		k2 := p.tau(temp)
-		p.k2 = k2
-		k1 := p.k1
-		p.M[0] += ((-3/2.*k1[0] + 2*k2[0]) * Dt)
-		p.M[1] += ((-3/2.*k1[1] + 2*k2[1]) * Dt)
-		p.M[2] += ((-3/2.*k1[2] + 2*k2[2]) * Dt)
+		p.k2 = p.tau(temp)
+
+		p.M = p.M.MAdd(-3./2.*Dt,p.k1).MAdd(2*Dt,p.k2)
+		//p.M[0] += ((-3/2.*k1[0] + 2*k2[0]) * Dt)
+		//p.M[1] += ((-3/2.*k1[1] + 2*k2[1]) * Dt)
+		//p.M[2] += ((-3/2.*k1[2] + 2*k2[2]) * Dt)
 		T += 1 / 2. * Dt
 	}
 	if Demag {
@@ -312,26 +305,16 @@ func rk3step(Lijst []*Particle) {
 	}
 	for _, p := range Lijst {
 		temp := p.tempfield
-		k3 := p.tau(temp)
-		k1 := p.k1
-		k2 := p.k2
-		p.M[0] += ((7/6.*k1[0] - 4/3.*k2[0] + 1/6.*k3[0]) * Dt)
-		p.M[1] += ((7/6.*k1[1] - 4/3.*k2[1] + 1/6.*k3[1]) * Dt)
-		p.M[2] += ((7/6.*k1[2] - 4/3.*k2[2] + 1/6.*k3[2]) * Dt)
+		p.k3 = p.tau(temp)
+		p.M=p.M.MAdd(7./6.*Dt, p.k1).MAdd(-4./3.*Dt,p.k2).MAdd(1./6.*Dt, p.k3)
+		//p.M[0] += ((7/6.*k1[0] - 4/3.*k2[0] + 1/6.*k3[0]) * Dt)
+		//p.M[1] += ((7/6.*k1[1] - 4/3.*k2[1] + 1/6.*k3[1]) * Dt)
+		//p.M[2] += ((7/6.*k1[2] - 4/3.*k2[2] + 1/6.*k3[2]) * Dt)
 
 		norm(p.M)
 
-		//	if suggest_timestep {
-		//		taux := (7/6.*k1[0] - 4/3.*k2[0] + 1/6.*k3[0])
-		//		tauy := (7/6.*k1[1] - 4/3.*k2[1] + 1/6.*k3[1])
-		//		tauz := (7/6.*k1[2] - 4/3.*k2[2] + 1/6.*k3[2])
-		//		torq := math.Sqrt(taux*taux + tauy*tauy + tauz*tauz)
-		//		if torq > maxtauwitht {
-		//			maxtauwitht = torq
-		//		}
-		//	}
 		T -= Dt
-		//if you have to save mdotH
+		//when saving mdotH
 		p.heff = p.b_eff(temp)
 
 	}
@@ -344,13 +327,12 @@ func anneliesstep(Lijst []*Particle) {
 	for _, p := range Lijst {
 		temp := p.temp()
 		p.tempfield = temp
-		tau0 := p.tau(temp)
-		p.k1 = tau0
+		p.k1 =  p.tau(temp)
 
-		//k1
-		p.M[0] += tau0[0] * 1. / 10. * Dt
-		p.M[1] += tau0[1] * 1. / 10. * Dt
-		p.M[2] += tau0[2] * 1. / 10. * Dt
+		p.M = p.M.MAdd(1./10.*Dt,p.k1)
+		//p.M[0] += tau0[0] * 1. / 10. * Dt
+		//p.M[1] += tau0[1] * 1. / 10. * Dt
+		//p.M[2] += tau0[2] * 1. / 10. * Dt
 		T += 1. / 10. * Dt
 	}
 
@@ -360,12 +342,12 @@ func anneliesstep(Lijst []*Particle) {
 
 	for _, p := range Lijst {
 		temp := p.tempfield
-		k2 := p.tau(temp)
-		p.k2 = k2
-		k1 := p.k1
-		p.M[0] += (((-1./10.-2189./5746.)*k1[0] + 2310./2873.*k2[0]) * Dt)
-		p.M[1] += (((-1./10.-2189./5746.)*k1[1] + 2310./2873.*k2[1]) * Dt)
-		p.M[2] += (((-1./10.-2189./5746.)*k1[2] + 2310./2873.*k2[2]) * Dt)
+		p.k2 = p.tau(temp)
+
+		p.M= p.M.MAdd((-1./10.-2189./5746)*Dt,p.k1).MAdd(2310./2873.*Dt,p.k2)
+		//p.M[0] += (((-1./10.-2189./5746.)*k1[0] + 2310./2873.*k2[0]) * Dt)
+		//p.M[1] += (((-1./10.-2189./5746.)*k1[1] + 2310./2873.*k2[1]) * Dt)
+		//p.M[2] += (((-1./10.-2189./5746.)*k1[2] + 2310./2873.*k2[2]) * Dt)
 		T += (-1./10. + 11./26.) * Dt
 	}
 	if Demag {
@@ -373,27 +355,18 @@ func anneliesstep(Lijst []*Particle) {
 	}
 	for _, p := range Lijst {
 		temp := p.tempfield
-		k3 := p.tau(temp)
-		k1 := p.k1
-		k2 := p.k2
-		p.M[0] += (((89./33.+2189./5746.)*k1[0] + (-475./126-2310./2873.)*k2[0] + 2873/1386.*k3[0]) * Dt)
-		p.M[1] += (((89./33.+2189./5746.)*k1[1] + (-475./126-2310./2873.)*k2[1] + 2873/1386.*k3[1]) * Dt)
-		p.M[2] += (((89./33.+2189./5746.)*k1[2] + (-475./126-2310./2873.)*k2[2] + 2873/1386.*k3[2]) * Dt)
+		p.k3 = p.tau(temp)
+
+		p.M= p.M.MAdd((89./33.+2189./5746.)*Dt,p.k1).MAdd((-475./126-2310./2873.)*Dt,p.k2).MAdd(2873/1386.*Dt,p.k3)
+		//p.M[0] += (((89./33.+2189./5746.)*k1[0] + (-475./126-2310./2873.)*k2[0] + 2873/1386.*k3[0]) * Dt)
+		//p.M[1] += (((89./33.+2189./5746.)*k1[1] + (-475./126-2310./2873.)*k2[1] + 2873/1386.*k3[1]) * Dt)
+		//p.M[2] += (((89./33.+2189./5746.)*k1[2] + (-475./126-2310./2873.)*k2[2] + 2873/1386.*k3[2]) * Dt)
 		T += (-11/26. + 1.) * Dt
 
 		norm(p.M)
 
-		//	if suggest_timestep {
-		//		taux := (7/6.*k1[0] - 4/3.*k2[0] + 1/6.*k3[0])
-		//		tauy := (7/6.*k1[1] - 4/3.*k2[1] + 1/6.*k3[1])
-		//		tauz := (7/6.*k1[2] - 4/3.*k2[2] + 1/6.*k3[2])
-		//		torq := math.Sqrt(taux*taux + tauy*tauy + tauz*tauz)
-		//		if torq > maxtauwitht {
-		//			maxtauwitht = torq
-		//		}
-		//	}
 		T -= Dt
-		//if you have to save mdotH
+		//when saving mdotH
 		p.heff = p.b_eff(temp)
 
 	}
@@ -405,14 +378,13 @@ func anneliesstep(Lijst []*Particle) {
 func rk4step(Lijst []*Particle) {
 	for _, p := range Lijst {
 		temp := p.temp()
-		tau0 := p.tau(temp)
 		p.tempfield = temp
-		p.k1 = tau0
+		p.k1 = p.tau(temp)
 
-		//k1
-		p.M[0] += tau0[0] * 1 / 2. * Dt
-		p.M[1] += tau0[1] * 1 / 2. * Dt
-		p.M[2] += tau0[2] * 1 / 2. * Dt
+		p.M = p.M.MAdd(0.5*Dt, p.k1)
+		//p.M[0] += tau0[0] * 1 / 2. * Dt
+		//p.M[1] += tau0[1] * 1 / 2. * Dt
+		//p.M[2] += tau0[2] * 1 / 2. * Dt
 		T += 1 / 2. * Dt
 	}
 
@@ -422,24 +394,24 @@ func rk4step(Lijst []*Particle) {
 
 	for _, p := range Lijst {
 		temp := p.tempfield
-		k2 := p.tau(temp)
-		p.k2 = k2
-		k1 := p.k1
-		p.M[0] += ((-1/2.*k1[0] + 1/2.*k2[0]) * Dt)
-		p.M[1] += ((-1/2.*k1[1] + 1/2.*k2[1]) * Dt)
-		p.M[2] += ((-1/2.*k1[2] + 1/2.*k2[2]) * Dt)
+		p.k2 = p.tau(temp)
+
+		p.M = p.M.MAdd(-0.5*Dt,p.k1).MAdd(0.5*Dt,p.k2)
+		//p.M[0] += ((-1/2.*k1[0] + 1/2.*k2[0]) * Dt)
+		//p.M[1] += ((-1/2.*k1[1] + 1/2.*k2[1]) * Dt)
+		//p.M[2] += ((-1/2.*k1[2] + 1/2.*k2[2]) * Dt)
 	}
 	if Demag {
 		calculatedemag()
 	}
 	for _, p := range Lijst {
 		temp := p.tempfield
-		k3 := p.tau(temp)
-		p.k3 = k3
-		k2 := p.k2
-		p.M[0] += ((-1/2.*k2[0] + 1*k3[0]) * Dt)
-		p.M[1] += ((-1/2.*k2[1] + 1*k3[1]) * Dt)
-		p.M[2] += ((-1/2.*k2[2] + 1*k3[2]) * Dt)
+		p.k3 = p.tau(temp)
+
+		p.M = p.M.MAdd(-0.5*Dt,p.k2).MAdd(Dt,p.k3)
+		//p.M[0] += ((-1/2.*k2[0] + 1*k3[0]) * Dt)
+		//p.M[1] += ((-1/2.*k2[1] + 1*k3[1]) * Dt)
+		//p.M[2] += ((-1/2.*k2[2] + 1*k3[2]) * Dt)
 		T += 1 / 2. * Dt
 	}
 	if Demag {
@@ -447,27 +419,16 @@ func rk4step(Lijst []*Particle) {
 	}
 	for _, p := range Lijst {
 		temp := p.tempfield
-		k4 := p.tau(temp)
-		k1 := p.k1
-		k2 := p.k2
-		k3 := p.k3
-		p.M[0] += ((1/6.*k1[0] + 1/3.*k2[0] - 2/3.*k3[0] + 1/6.*k4[0]) * Dt)
-		p.M[1] += ((1/6.*k1[1] + 1/3.*k2[1] - 2/3.*k3[1] + 1/6.*k4[1]) * Dt)
-		p.M[2] += ((1/6.*k1[2] + 1/3.*k2[2] - 2/3.*k3[2] + 1/6.*k4[2]) * Dt)
+		p.k4 = p.tau(temp)
 
-		//	if suggest_timestep {
-		//		taux := (1/6.*k1[0] + 1/3.*k2[0] - 2/3.*k3[0] + 1/6.*k4[0])
-		//		tauy := (1/6.*k1[1] + 1/3.*k2[1] - 2/3.*k3[1] + 1/6.*k4[1])
-		//		tauz := (1/6.*k1[2] + 1/3.*k2[2] - 2/3.*k3[2] + 1/6.*k4[2])
-		//		torq := math.Sqrt(taux*taux + tauy*tauy + tauz*tauz)
+		p.M= p.M.MAdd(1/6.*Dt, p.k1).MAdd(1/3.*Dt, p.k2).MAdd(-2/3.*Dt,p.k3).MAdd(1/6.*Dt,p.k4)
+		//p.M[0] += ((1/6.*k1[0] + 1/3.*k2[0] - 2/3.*k3[0] + 1/6.*k4[0]) * Dt)
+		//p.M[1] += ((1/6.*k1[1] + 1/3.*k2[1] - 2/3.*k3[1] + 1/6.*k4[1]) * Dt)
+		//p.M[2] += ((1/6.*k1[2] + 1/3.*k2[2] - 2/3.*k3[2] + 1/6.*k4[2]) * Dt)
 
-		//		if torq > maxtauwitht {
-		//			maxtauwitht = torq
-		//		}
-		//	}
 		norm(p.M)
 		T -= Dt
-		//if you have to save mdotH
+		//when saving mdotH
 		p.heff = p.b_eff(temp)
 
 	}
@@ -484,13 +445,13 @@ func dopristep(Lijst []*Particle) {
 		p.previousm = p.M
 
 		temp := p.temp()
-		k1 := p.tau(temp)
 		p.tempfield = temp
-		p.k1 = k1
+		p.k1 = p.tau(temp)
 
-		p.M[0] += k1[0] * 1 / 5. * Dt
-		p.M[1] += k1[1] * 1 / 5. * Dt
-		p.M[2] += k1[2] * 1 / 5. * Dt
+		p.M = p.M.MAdd(1/5.*Dt,p.k1)
+		//p.M[0] += k1[0] * 1 / 5. * Dt
+		//p.M[1] += k1[1] * 1 / 5. * Dt
+		//p.M[2] += k1[2] * 1 / 5. * Dt
 		T += 1 / 5. * Dt
 
 	}
@@ -500,14 +461,13 @@ func dopristep(Lijst []*Particle) {
 	for _, p := range Lijst {
 
 		temp := p.tempfield
-		k1 := p.k1
-		k2 := p.tau(temp)
-		p.k2 = k2
+		p.k2 = p.tau(temp)
 
-		p.M = p.tempm
-		p.M[0] += ((3/40.*k1[0] + 9/40.*k2[0]) * Dt)
-		p.M[1] += ((3/40.*k1[1] + 9/40.*k2[1]) * Dt)
-		p.M[2] += ((3/40.*k1[2] + 9/40.*k2[2]) * Dt)
+		p.M = p.tempm.MAdd(3/40.*Dt,p.k1).MAdd(9/40.*Dt,p.k2)
+		//p.M = p.tempm
+		//p.M[0] += ((3/40.*k1[0] + 9/40.*k2[0]) * Dt)
+		//p.M[1] += ((3/40.*k1[1] + 9/40.*k2[1]) * Dt)
+		//p.M[2] += ((3/40.*k1[2] + 9/40.*k2[2]) * Dt)
 		T += 1 / 10. * Dt
 	}
 	if Demag {
@@ -515,15 +475,13 @@ func dopristep(Lijst []*Particle) {
 	}
 	for _, p := range Lijst {
 		temp := p.tempfield
-		k1 := p.k1
-		k2 := p.k2
-		k3 := p.tau(temp)
-		p.k3 = k3
+		p.k3 = p.tau(temp)
 
-		p.M = p.tempm
-		p.M[0] += ((44/45.*k1[0] - 56/15.*k2[0] + 32/9.*k3[0]) * Dt)
-		p.M[1] += ((44/45.*k1[1] - 56/15.*k2[1] + 32/9.*k3[1]) * Dt)
-		p.M[2] += ((44/45.*k1[2] - 56/15.*k2[2] + 32/9.*k3[2]) * Dt)
+		p.M = p.tempm.MAdd(44/45.*Dt,p.k1).MAdd(-56/15.*Dt,p.k2).MAdd(32/9.*Dt,p.k3)
+		//p.M = p.tempm
+		//p.M[0] += ((44/45.*k1[0] - 56/15.*k2[0] + 32/9.*k3[0]) * Dt)
+		//p.M[1] += ((44/45.*k1[1] - 56/15.*k2[1] + 32/9.*k3[1]) * Dt)
+		//p.M[2] += ((44/45.*k1[2] - 56/15.*k2[2] + 32/9.*k3[2]) * Dt)
 		T += 1 / 2. * Dt
 	}
 	if Demag {
@@ -531,16 +489,13 @@ func dopristep(Lijst []*Particle) {
 	}
 	for _, p := range Lijst {
 		temp := p.tempfield
-		k1 := p.k1
-		k2 := p.k2
-		k3 := p.k3
-		k4 := p.tau(temp)
-		p.k4 = k4
+		p.k4 = p.tau(temp)
 
-		p.M = p.tempm
-		p.M[0] += ((19372/6561.*k1[0] - 25360/2187.*k2[0] + 64448/6561.*k3[0] - 212/729.*k4[0]) * Dt)
-		p.M[1] += ((19372/6561.*k1[1] - 25360/2187.*k2[1] + 64448/6561.*k3[1] - 212/729.*k4[1]) * Dt)
-		p.M[2] += ((19372/6561.*k1[2] - 25360/2187.*k2[2] + 64448/6561.*k3[2] - 212/729.*k4[2]) * Dt)
+		p.M = p.tempm.MAdd(19372/6561.*Dt,p.k1).MAdd(-25360/2187.*Dt,p.k2).MAdd(64448/6561.*Dt,p.k3).MAdd(-212/729.*Dt,p.k4)
+		//p.M = p.tempm
+		//p.M[0] += ((19372/6561.*k1[0] - 25360/2187.*k2[0] + 64448/6561.*k3[0] - 212/729.*k4[0]) * Dt)
+		//p.M[1] += ((19372/6561.*k1[1] - 25360/2187.*k2[1] + 64448/6561.*k3[1] - 212/729.*k4[1]) * Dt)
+		//p.M[2] += ((19372/6561.*k1[2] - 25360/2187.*k2[2] + 64448/6561.*k3[2] - 212/729.*k4[2]) * Dt)
 		T += (-4/5. + 8/9.) * Dt
 	}
 	if Demag {
@@ -548,17 +503,13 @@ func dopristep(Lijst []*Particle) {
 	}
 	for _, p := range Lijst {
 		temp := p.tempfield
-		k1 := p.k1
-		k2 := p.k2
-		k3 := p.k3
-		k4 := p.k4
-		k5 := p.tau(temp)
-		p.k5 = k5
+		p.k5 = p.tau(temp)
 
-		p.M = p.tempm
-		p.M[0] += ((9017/3168.*k1[0] - 355/33.*k2[0] + 46732/5247.*k3[0] + 49/176.*k4[0] - 5103/18656.*k5[0]) * Dt)
-		p.M[1] += ((9017/3168.*k1[1] - 355/33.*k2[1] + 46732/5247.*k3[1] + 49/176.*k4[1] - 5103/18656.*k5[1]) * Dt)
-		p.M[2] += ((9017/3168.*k1[2] - 355/33.*k2[2] + 46732/5247.*k3[2] + 49/176.*k4[2] - 5103/18656.*k5[2]) * Dt)
+		p.M = p.tempm.MAdd(9017/3168.*Dt,p.k1).MAdd(-355/33.*Dt,p.k2).MAdd(46732/5247.*Dt,p.k3).MAdd(49/176.*Dt,p.k4).MAdd(-5103/18656.*Dt,p.k5)
+		//p.M = p.tempm
+		//p.M[0] += ((9017/3168.*k1[0] - 355/33.*k2[0] + 46732/5247.*k3[0] + 49/176.*k4[0] - 5103/18656.*k5[0]) * Dt)
+		//p.M[1] += ((9017/3168.*k1[1] - 355/33.*k2[1] + 46732/5247.*k3[1] + 49/176.*k4[1] - 5103/18656.*k5[1]) * Dt)
+		//p.M[2] += ((9017/3168.*k1[2] - 355/33.*k2[2] + 46732/5247.*k3[2] + 49/176.*k4[2] - 5103/18656.*k5[2]) * Dt)
 		T += 1 / 9. * Dt
 	}
 	if Demag {
@@ -567,18 +518,13 @@ func dopristep(Lijst []*Particle) {
 
 	for _, p := range Lijst {
 		temp := p.tempfield
-		k1 := p.k1
-		k2 := p.k2
-		k3 := p.k3
-		k4 := p.k4
-		k5 := p.k5
-		k6 := p.tau(temp)
-		p.k6 = k6
+		p.k6 = p.tau(temp)
 
-		p.M = p.tempm
-		p.M[0] += ((35/384.*k1[0] + 0.*k2[0] + 500/1113.*k3[0] + 125/192.*k4[0] - 2187/6784.*k5[0] + 11/84.*k6[0]) * Dt)
-		p.M[1] += ((35/384.*k1[1] + 0.*k2[1] + 500/1113.*k3[1] + 125/192.*k4[1] - 2187/6784.*k5[1] + 11/84.*k6[1]) * Dt)
-		p.M[2] += ((35/384.*k1[2] + 0.*k2[2] + 500/1113.*k3[2] + 125/192.*k4[2] - 2187/6784.*k5[2] + 11/84.*k6[2]) * Dt)
+		p.M =p.tempm.MAdd(35/384.*Dt,p.k1).MAdd(500/1113.*Dt,p.k3).MAdd(125/192.*Dt,p.k4).MAdd(-2187/6784.*Dt,p.k5).MAdd(11/84.*Dt,p.k6)
+		//p.M = p.tempm
+		//p.M[0] += ((35/384.*k1[0] + 0.*k2[0] + 500/1113.*k3[0] + 125/192.*k4[0] - 2187/6784.*k5[0] + 11/84.*k6[0]) * Dt)
+		//p.M[1] += ((35/384.*k1[1] + 0.*k2[1] + 500/1113.*k3[1] + 125/192.*k4[1] - 2187/6784.*k5[1] + 11/84.*k6[1]) * Dt)
+		//p.M[2] += ((35/384.*k1[2] + 0.*k2[2] + 500/1113.*k3[2] + 125/192.*k4[2] - 2187/6784.*k5[2] + 11/84.*k6[2]) * Dt)
 		//and this is also the fifth order solution
 	}
 	if Demag {
@@ -587,18 +533,14 @@ func dopristep(Lijst []*Particle) {
 
 	for _, p := range Lijst {
 		temp := p.tempfield
-		k1 := p.k1
-		k2 := p.k2
-		k3 := p.k3
-		k4 := p.k4
-		k5 := p.k5
-		k6 := p.k6
-		k7 := p.tau(temp)
-		p.k7 = k7
+		p.k7 = p.tau(temp)
 
-		p.tempm[0] += ((5179/57600.*k1[0] + 0.*k2[0] + 7571/16695.*k3[0] + 393/640.*k4[0] - 92097/339200.*k5[0] + 187/2100.*k6[0] + 1/40.*k7[0]) * Dt)
-		p.tempm[1] += ((5179/57600.*k1[1] + 0.*k2[1] + 7571/16695.*k3[1] + 393/640.*k4[1] - 92097/339200.*k5[1] + 187/2100.*k6[1] + 1/40.*k7[1]) * Dt)
-		p.tempm[2] += ((5179/57600.*k1[2] + 0.*k2[2] + 7571/16695.*k3[2] + 393/640.*k4[2] - 92097/339200.*k5[2] + 187/2100.*k6[2] + 1/40.*k7[2]) * Dt)
+		
+		p.tempm = p.tempm.MAdd(5179/57600.*Dt,p.k1).MAdd(7571/16695.*Dt,p.k3).MAdd(393/640.*Dt,p.k4).MAdd(-92097/339200.*Dt,p.k5).MAdd(187/2100.*Dt,p.k6).MAdd(1/40.*Dt,p.k7)
+		//p.tempm[0] += ((5179/57600.*k1[0] + 0.*k2[0] + 7571/16695.*k3[0] + 393/640.*k4[0] - 92097/339200.*k5[0] + 187/2100.*k6[0] + 1/40.*k7[0]) * Dt)
+		//p.tempm[1] += ((5179/57600.*k1[1] + 0.*k2[1] + 7571/16695.*k3[1] + 393/640.*k4[1] - 92097/339200.*k5[1] + 187/2100.*k6[1] + 1/40.*k7[1]) * Dt)
+		//p.tempm[2] += ((5179/57600.*k1[2] + 0.*k2[2] + 7571/16695.*k3[2] + 393/640.*k4[2] - 92097/339200.*k5[2] + 187/2100.*k6[2] + 1/40.*k7[2]) * Dt)
+
 		//and this is also the fourth order solution
 		norm(p.M)
 		norm(p.tempm)
@@ -613,7 +555,7 @@ func dopristep(Lijst []*Particle) {
 				maxtauwitht = error
 			}
 		}
-		//if you have to save mdotH
+		//when saving mdotH
 		p.heff = p.b_eff(temp)
 
 		T -= Dt
