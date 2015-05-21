@@ -14,3 +14,4 @@
 if (gofmt -w -l */*.go */*/*.go | grep \.go); then exit 1; fi;
 go test
 
+(cd examples && make)
