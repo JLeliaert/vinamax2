@@ -44,5 +44,5 @@ func DiffDipole(i int, m, R Vector) Vector {
 	dBzdi:=3*R[Z]*m[i]/r5-15*mdotr*R[Z]*R[i]/r7-3*m[i]*R[i]/r5
 	if(i==Z){dBzdi+=3*(mdotr)/r5}
 
-	return Vector{dBxdi, dBydi, dBzdi}
+	return Vector{dBxdi, dBydi, dBzdi}.Mul(1 / (4 * math.Pi))
 }
