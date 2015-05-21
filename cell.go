@@ -68,23 +68,18 @@ func (c *Cell) updateBdemag(parent *Cell) {
 	} else {
 		c.addNearFields()
 	}
-
 }
 
 // add expansions of fields of partner sources
 func (c *Cell) addPartnerFields() {
 	for _, p := range c.partner {
 		r := c.center.Sub(p.center)
-		if r.Dot(r) == 0 {
-			panic("self")
-		}
 		B := DipoleField(p.m, r)
 		c.b0 = c.b0.Add(B)
 
 		c.dbdx = c.dbdx.Add(DiffDipole(X, p.m, r))
 		c.dbdy = c.dbdy.Add(DiffDipole(Y, p.m, r))
 		c.dbdz = c.dbdz.Add(DiffDipole(Z, p.m, r))
-
 	}
 }
 

@@ -27,15 +27,20 @@ func main() {
 
 	InitFMM(worldSize, NLEVEL)
 
+	r := 1e-9
+	msat := 1e6
+
 	// place particles with m=0 , as field probes
 	baseLevel := Level[NLEVEL-1]
 	for _, c := range baseLevel {
-		AddParticle(NewParticle(c.Center(), Vector{}))
+		M := Vector{}
+		AddParticle(NewParticle(c.Center(), r, M, msat))
 	}
 
 	// place one magneticed particle as source
 	hotcell := baseLevel[0]
-	AddParticle(NewParticle(hotcell.Center(), Vector{1, 2, 3}))
+	M := Vector{1, 2, 3}
+	AddParticle(NewParticle(hotcell.Center(), r, M, msat))
 
 	for i := 0; i < 500; i++ {
 		CalcDemag()

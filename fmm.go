@@ -33,7 +33,6 @@ func CalcDemag() {
 	Root.dbdz = Vector{0, 0, 0}
 
 	Root.updateBdemag(&Root) // we abuse root as parent, it only propagetes zero fields
-
 }
 
 // Initializes the global FMM variables Root, Level
