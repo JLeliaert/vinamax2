@@ -177,7 +177,7 @@ func (c *Cell) IsLeaf() bool {
 func IsFar(a, b *Cell) bool {
 	// TODO: this is more or less a touch criterion: improve!
 	dist := a.center.Sub(b.center).Len()
-	return dist > 2*a.size.Len() // TODO
+	return dist > 1.1*a.size.Len() // TODO
 }
 
 // Create child cells to reach nLevels of levels and add to global level array.

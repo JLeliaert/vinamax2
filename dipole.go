@@ -26,23 +26,50 @@ func DipoleField(m, R Vector) Vector {
 
 // Partial derivative (dB/di) of field generated at position R relative to dipole m.
 // Direction of derivative: i = X,Y or Z.
+
+// dBx/dx = 3*x*(m1*x+m2*y+m3*z)/(x^2+y^2+z^2)^(5/2) - m1/(x^2+y^2+z^2)^(3/2)
+// dBx/dy = -15xy mdotR / r^7 + 3y m_x/r^5 + 3m_y x / r^5
 func DiffDipole(i int, m, R Vector) Vector {
-	r := R.Len()
-	r2 := r * r
-	r3 := r * r2
-	r5 := r3 * r2
-	r7 := r5 * r2
-	mdotr :=m.Dot(R)
 
-	
-	dBxdi:= 3*R[X]*m[i]/r5-15*mdotr*R[X]*R[i]/r7-3*m[i]*R[i]/r5
-	if(i==X){dBxdi+=3*(mdotr)/r5}
+	return Vector{d(X, i), d(Y, i), d(Z, i)}
 
-	dBydi:=3*R[Y]*m[i]/r5-15*mdotr*R[Y]*R[i]/r7-3*m[i]*R[i]/r5
-	if(i==Y){dBydi+=3*(mdotr)/r5}
+	//r := R.Len()
+	//r2 := r * r
+	//r3 := r * r2
+	//r5 := r3 * r2
+	//r7 := r5 * r2
+	//mdotr := m.Dot(R)
 
-	dBzdi:=3*R[Z]*m[i]/r5-15*mdotr*R[Z]*R[i]/r7-3*m[i]*R[i]/r5
-	if(i==Z){dBzdi+=3*(mdotr)/r5}
+	//dBxdi := 3*R[X]*m[i]/r5 - 15*mdotr*R[X]*R[i]/r7 + 3*m[X]*R[i]/r5
+	//if i == X {
+	//	dBxdi += 3 * (mdotr) / r5
+	//}
 
-	return Vector{dBxdi, dBydi, dBzdi}.Mul(1 / (4 * math.Pi))
+	//dBydi := 3*R[Y]*m[i]/r5 - 15*mdotr*R[Y]*R[i]/r7 + 3*m[Y]*R[i]/r5
+	//if i == Y {
+	//	dBydi += 3 * (mdotr) / r5
+	//}
+
+	//dBzdi := 3*R[Z]*m[i]/r5 - 15*mdotr*R[Z]*R[i]/r7 + 3*m[Z]*R[i]/r5
+	//if i == Z {
+	//	dBzdi += 3 * (mdotr) / r5
+	//}
+
+	//return Vector{dBxdi, dBydi, dBzdi}.Mul(1 / (4 * math.Pi))
+}
+
+func d(c, i int) float64 {
+	if c == i {
+		return ddiag(i)
+	} else {
+		return doff(c, i)
+	}
+}
+
+func ddiag(i int) float64 {
+	return 0
+}
+
+func doff(c, i int) float64 {
+	return 0
 }
