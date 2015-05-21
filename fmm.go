@@ -26,7 +26,14 @@ func AddParticle(p *Particle) {
 // Calculates the magnetostatic field of all Particles.
 func CalcDemag() {
 	Root.updateM()
-	Root.updateBdemag(nil)
+
+	Root.b0 = Vector{0, 0, 0}
+	Root.dbdx = Vector{0, 0, 0}
+	Root.dbdy = Vector{0, 0, 0}
+	Root.dbdz = Vector{0, 0, 0}
+
+	Root.updateBdemag(&Root) // we abuse root as parent, it only propagetes zero fields
+
 }
 
 // Initializes the global FMM variables Root, Level

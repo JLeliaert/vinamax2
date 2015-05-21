@@ -52,20 +52,27 @@ func (c *Cell) updateBdemag(parent *Cell) {
 
 	// propagete parent field expansion to this cell,
 	// (applies shift to Taylor expansion)
-	if parent == nil {
-		c.b0 = Vector{0, 0, 0}
-		c.dbdx = Vector{0, 0, 0}
-		c.dbdy = Vector{0, 0, 0}
-		c.dbdz = Vector{0, 0, 0}
+	sh := c.center.Sub(parent.center)
+	c.b0 = parent.b0.MAdd(sh[X], parent.dbdx).MAdd(sh[Y], parent.dbdy).MAdd(sh[Z], parent.dbdz)
+	c.dbdx = parent.dbdx
+	c.dbdy = parent.dbdy
+	c.dbdz = parent.dbdz
+
+	c.addPartnerFields()
+
+	if !c.IsLeaf() {
+		// propagete field to children
+		for _, ch := range c.child {
+			ch.updateBdemag(c)
+		}
 	} else {
-		sh := c.center.Sub(parent.center)
-		c.b0 = parent.b0.MAdd(sh[X], parent.dbdx).MAdd(sh[Y], parent.dbdy).MAdd(sh[Z], parent.dbdz)
-		c.dbdx = parent.dbdx
-		c.dbdy = parent.dbdy
-		c.dbdz = parent.dbdz
+		c.addNearFields()
 	}
 
-	// add expansions of fields of partner sources
+}
+
+// add expansions of fields of partner sources
+func (c *Cell) addPartnerFields() {
 	for _, p := range c.partner {
 		r := c.center.Sub(p.center)
 		if r.Dot(r) == 0 {
@@ -79,14 +86,10 @@ func (c *Cell) updateBdemag(parent *Cell) {
 		c.dbdz = c.dbdz.Add(DiffDipole(Z, p.m, r))
 
 	}
+}
 
-	// if !leaf:
-	// propagete field to children
-	for _, ch := range c.child {
-		ch.updateBdemag(c)
-	}
-
-	// if leaf cell:
+// Add demag of nearby particles by brute force
+func (c *Cell) addNearFields() {
 	for _, dst := range c.particles {
 
 		// start with field from cell's Taylor expansion:
@@ -104,7 +107,6 @@ func (c *Cell) updateBdemag(parent *Cell) {
 			}
 		}
 	}
-
 }
 
 // recursively update this cell's m as the sum
