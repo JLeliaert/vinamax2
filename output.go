@@ -1,29 +1,68 @@
 //Contains function to control the output of the program
 package vinamax2
+
 //
 import (
 	"fmt"
-	"math"
 	"log"
+	"math"
 	"os"
+	"path/filepath"
+	"strings"
 )
 
-var f *os.File
-var err error
-var twrite float64
-var locations []Vector
-var filecounter int = 0
-var output_B_ext = false
-var output_Dt = false
-var output_nrmzpos = false
-var output_mdoth = false
+var (
+	outputFile     *os.File
+	err            error
+	twrite         float64
+	locations      []Vector
+	filecounter    int = 0
+	output_B_ext       = false
+	output_Dt          = false
+	output_nrmzpos     = false
+	output_mdoth       = false
+)
+
+//Initialise the outputdir
+func initOutput() {
+
+	// make and clear output directory
+	fname := os.Args[0]
+	f2name := strings.Split(fname, "/") // TODO: use path.Split?
+	outdir = fmt.Sprint(f2name[len(f2name)-1], ".out")
+	os.Mkdir(outdir, 0775)
+	dir, err3 := os.Open(outdir)
+	files, _ := dir.Readdir(1)
+	// clean output dir, copied from mumax
+	if len(files) != 0 {
+		filepath.Walk(outdir, func(path string, i os.FileInfo, err error) error {
+			if path != outdir {
+				os.RemoveAll(path)
+			}
+			return nil
+		})
+	}
+
+	if err3 != nil {
+		panic(err3)
+	}
+
+	outputFile, err = os.Create(outdir + "/table.txt")
+	check(err)
+
+}
+
+func writeString(s string) {
+	if outputFile == nil {
+		initOutput()
+	}
+
+}
 
 //Sets the interval at which Mul the output table has to be written
 func Output(interval float64) {
 	outputcalled = true
-	f, err = os.Create(outdir + "/table.txt")
-	check(err)
-	defer f.Close()
+
 	writeheader()
 	outputinterval = interval
 	twrite = interval
@@ -53,7 +92,7 @@ func averagemoments(lijst []*Particle) Vector {
 	totalvolume := 0.
 	for i := range lijst {
 		radius := lijst[i].r
-		volume := radius*radius*radius * 4. / 3. * math.Pi
+		volume := radius * radius * radius * 4. / 3. * math.Pi
 		totalvolume += volume
 		avgs[0] += lijst[i].M[0] * volume
 		avgs[1] += lijst[i].M[1] * volume
@@ -90,39 +129,32 @@ func nrmzpositive(lijst []*Particle) int {
 //Writes the header in table.txt
 func writeheader() {
 	header := fmt.Sprintf("#t\t<mx>\t<my>\t<mz>")
-	_, err = f.WriteString(header)
-	check(err)
+	writeString(header)
 	if output_B_ext {
 		header := fmt.Sprintf("\tB_ext_x\tB_ext_y\tB_ext_z")
-		_, err = f.WriteString(header)
-		check(err)
+		writeString(header)
 	}
 	if output_Dt {
 		header := fmt.Sprintf("\tDt")
-		_, err = f.WriteString(header)
-		check(err)
+		writeString(header)
 	}
 	if output_nrmzpos {
 		header := fmt.Sprintf("\tnrmzpos")
-		_, err = f.WriteString(header)
-		check(err)
+		writeString(header)
 	}
 	if output_mdoth {
 		header := fmt.Sprintf("\tmdotH")
-		_, err = f.WriteString(header)
-		check(err)
+		writeString(header)
 	}
 	for i := range locations {
 
 		header = fmt.Sprintf("\t(B_x\tB_y\tB_z)@(%v,%v,%v)", locations[i][0], locations[i][1], locations[i][2])
-		_, err = f.WriteString(header)
-		check(err)
+		writeString(header)
 	}
 
 	header = fmt.Sprintf("\n")
-	_, err = f.WriteString(header)
+	writeString(header)
 	check(err)
-
 }
 
 //Adds the field at a specific location to the output table
@@ -140,39 +172,32 @@ func Tableadd_b_at_location(x, y, z float64) {
 func write(avg Vector) {
 	if twrite >= outputinterval && outputinterval != 0 {
 		string := fmt.Sprintf("%e\t%v\t%v\t%v", T, avg[0], avg[1], avg[2])
-		_, err = f.WriteString(string)
-		check(err)
+		writeString(string)
 
 		if output_B_ext {
 			B_ext_x, B_ext_y, B_ext_z := B_ext(T)
 			string = fmt.Sprintf("\t%v\t%v\t%v", B_ext_x, B_ext_y, B_ext_z)
-			_, err = f.WriteString(string)
-			check(err)
+			writeString(string)
 		}
 		if output_Dt {
 			string = fmt.Sprintf("\t%v", Dt)
-			_, err = f.WriteString(string)
-			check(err)
+			writeString(string)
 		}
 		if output_nrmzpos {
 			string = fmt.Sprintf("\t%v", nrmzpositive(Particles))
-			_, err = f.WriteString(string)
-			check(err)
+			writeString(string)
 		}
 		if output_mdoth {
 			string = fmt.Sprintf("\t%v", averagemdoth(Particles))
-			_, err = f.WriteString(string)
-			check(err)
+			writeString(string)
 		}
 		for i := range locations {
 
-		//TODO	string = fmt.Sprintf("\t%v\t%v\t%v", (demag(locations[i][0], locations[i][1], locations[i][2])[0]), (demag(locations[i][0], locations[i][1], locations[i][2])[1]), (demag(locations[i][0], locations[i][1], locations[i][2])[2]))
-			string = fmt.Sprintf("\t%v",i) 
-			_, err = f.WriteString(string)
-			check(err)
+			//TODO	string = fmt.Sprintf("\t%v\t%v\t%v", (demag(locations[i][0], locations[i][1], locations[i][2])[0]), (demag(locations[i][0], locations[i][1], locations[i][2])[1]), (demag(locations[i][0], locations[i][1], locations[i][2])[2]))
+			string = fmt.Sprintf("\t%v", i)
+			writeString(string)
 		}
-		_, err = f.WriteString("\n")
-		check(err)
+		writeString("\n")
 		twrite = 0.
 	}
 	twrite += Dt
@@ -250,10 +275,4 @@ func Tableadd(a string) {
 			log.Fatal(a, " is currently not addable to table")
 		}
 	}
-}
-
-func Writeintable(a string) {
-	string := fmt.Sprintf("%v\n", a)
-	_, err = f.WriteString(string)
-	check(err)
 }

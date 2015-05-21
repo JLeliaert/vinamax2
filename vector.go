@@ -46,11 +46,10 @@ func (v Vector) Len() float64 {
 }
 
 //sets norm of a vector to one
-func norm(x Vector) { 
-        magnitude := math.Sqrt(x[0]*x[0] + x[1]*x[1] + x[2]*x[2]) 
-        x= x.Mul(1. / magnitude) 
-}     
-
+func norm(x Vector) {
+	magnitude := math.Sqrt(x[0]*x[0] + x[1]*x[1] + x[2]*x[2])
+	x = x.Mul(1. / magnitude)
+}
 
 // Returns the uniform norm of v
 // (maximum of absolute values of components)

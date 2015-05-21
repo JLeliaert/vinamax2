@@ -3,12 +3,8 @@
 package vinamax2
 
 import (
-	"fmt"
 	"log"
 	"math"
-	"os"
-	"path/filepath"
-	"strings"
 )
 
 const (
@@ -22,7 +18,6 @@ const (
 var outdir string // TODO: move to io.go
 
 func init() {
-
 	log.Println(`
 vinamax: a macrospin model to simulate magnetic nanoparticles
 Copyright (C) 2013  Jonathan Leliaert
@@ -44,25 +39,4 @@ contact: jonathan.leliaert@gmail.com
 
 `)
 
-	//Initialise the outputdir
-
-	fname := os.Args[0]
-	f2name := strings.Split(fname, "/") // TODO: use path.Split?
-	outdir = fmt.Sprint(f2name[len(f2name)-1], ".out")
-	os.Mkdir(outdir, 0775)
-	f, err3 := os.Open(outdir)
-	files, _ := f.Readdir(1)
-	// clean output dir, copied from mumax
-	if len(files) != 0 {
-		filepath.Walk(outdir, func(path string, i os.FileInfo, err error) error {
-			if path != outdir {
-				os.RemoveAll(path)
-			}
-			return nil
-		})
-	}
-
-	if err3 != nil {
-		panic(err3)
-	}
 }

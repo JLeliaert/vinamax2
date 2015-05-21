@@ -20,7 +20,7 @@ func Setrandomseed(a int64) {
 
 // factor 4/3pi in "number" because they are spherical
 func (p *Particle) calculatetempnumber() {
-	p.tempnumber = math.Sqrt((2. * kb * Alpha * Temp) / (gamma0 * p.msat * 4. / 3. * math.Pi * p.r*p.r*p.r * Dt))
+	p.tempnumber = math.Sqrt((2. * kb * Alpha * Temp) / (gamma0 * p.msat * 4. / 3. * math.Pi * p.r * p.r * p.r * Dt))
 }
 
 func calculatetempnumbers(lijst []*Particle) {
@@ -48,7 +48,7 @@ func (p *Particle) temp() Vector {
 //Calculates the Zeeman field working on a Particle
 func (p *Particle) zeeman() Vector {
 	x, y, z := B_ext(T)
-	x2, y2, z2 := B_ext_space(T, p.center[0],p.center[1],p.center[2],)
+	x2, y2, z2 := B_ext_space(T, p.center[0], p.center[1], p.center[2])
 	return Vector{x + x2, y + y2, z + z2}
 }
 

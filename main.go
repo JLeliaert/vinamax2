@@ -3,9 +3,10 @@
 package main
 
 import (
-	. "."
 	"flag"
 	"math"
+
+	. "."
 )
 
 var (
