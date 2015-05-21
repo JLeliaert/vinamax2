@@ -18,12 +18,9 @@ func main() {
 	InitFMM(Vector{worldsize, worldsize, worldsize}, nLevels)
 
 	r := 16e-9
-	Particle_radius(r)
-
 	M := Vector{0, 1, 0}
-
 	msat := 860e3
-	Msat(msat)
+
 	p1 := NewParticle(Vector{-64.48e-9, 0, 0}, r, M, msat)
 	p2 := NewParticle(Vector{64.48e-9, 0, 0}, r, M, msat)
 

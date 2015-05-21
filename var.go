@@ -80,45 +80,46 @@ func testinput() {
 
 //checks the inputfiles for functions that should have been called but weren't
 func syntaxrun() {
-	if msatcalled == false {
-		log.Fatal("You have to specify msat")
-	}
-	if radiuscalled == false {
-		log.Fatal("You have to specify the size of the particles")
-	}
-	if uaniscalled == false && Ku1 != 0 {
-		log.Fatal("You have to specify the uniaxial anisotropy-axis")
-	}
-	if (c1called == false || c2called == false) && Kc1 != 0 {
-		log.Fatal("You have to specify the cubic anisotropy-axes")
-	}
-	if worldcalled == false {
-		log.Fatal("You have define a \"World\"")
-	}
-	if magnetisationcalled == false {
-		log.Fatal("You have specify the initial magnetisation")
-	}
-	if treecalled == false && FMM == true {
-		log.Fatal("You have to run Maketree() as last command in front of Run() when using the FMM method")
-	}
-	if Temp != 0 && randomseedcalled == false {
-		log.Fatal("You have to run Setrandomseed() when using nonzero temperatures")
-	}
-	if tableaddcalled == true && outputcalled == false {
-		log.Fatal("You have to run Output(interval) when calling tableadd")
-	}
-	if Brown == true && Adaptivestep == true {
-		log.Fatal("Brown Temperature can only be used with fixed timestep")
-	}
-	//if Jumpnoise == true {
-	//	resetswitchtimes(universe.lijst)
-	//}
-	if Temp != 0 && Brown == false && Jumpnoise == false {
-		log.Fatal("You have to specify which temperature you want to use: \"Jumpnoise\" or \"Brown\"")
-	}
-	//if Brown {
-	//	calculatetempnumbers(universe.lijst)
-	//}
+	log.Println("TODO: call syntaxrun()!")
+	// if msatcalled == false {
+	// 	log.Fatal("You have to specify msat")
+	// }
+	// if radiuscalled == false {
+	// 	log.Fatal("You have to specify the size of the particles")
+	// }
+	// if uaniscalled == false && Ku1 != 0 {
+	// 	log.Fatal("You have to specify the uniaxial anisotropy-axis")
+	// }
+	// if (c1called == false || c2called == false) && Kc1 != 0 {
+	// 	log.Fatal("You have to specify the cubic anisotropy-axes")
+	// }
+	// if worldcalled == false {
+	// 	log.Fatal("You have define a \"World\"")
+	// }
+	// if magnetisationcalled == false {
+	// 	log.Fatal("You have specify the initial magnetisation")
+	// }
+	// if treecalled == false && FMM == true {
+	// 	log.Fatal("You have to run Maketree() as last command in front of Run() when using the FMM method")
+	// }
+	// if Temp != 0 && randomseedcalled == false {
+	// 	log.Fatal("You have to run Setrandomseed() when using nonzero temperatures")
+	// }
+	// if tableaddcalled == true && outputcalled == false {
+	// 	log.Fatal("You have to run Output(interval) when calling tableadd")
+	// }
+	// if Brown == true && Adaptivestep == true {
+	// 	log.Fatal("Brown Temperature can only be used with fixed timestep")
+	// }
+	// //if Jumpnoise == true {
+	// //	resetswitchtimes(universe.lijst)
+	// //}
+	// if Temp != 0 && Brown == false && Jumpnoise == false {
+	// 	log.Fatal("You have to specify which temperature you want to use: \"Jumpnoise\" or \"Brown\"")
+	// }
+	// //if Brown {
+	// //	calculatetempnumbers(universe.lijst)
+	// //}
 }
 
 //Sets the radius of all entries in radii to a constant value
