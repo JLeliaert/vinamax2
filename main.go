@@ -4,6 +4,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"math"
 
 	. "."
@@ -43,24 +44,24 @@ func main() {
 
 	// place one magneticed particle as source
 	hotcell := baseLevel[0]
-	M := Vector{1, 2, 3}
+	M := Vector{1, 0, 0}
 	AddParticle(NewParticle(hotcell.Center(), r, M, msat))
 
 	CalcDemag()
 	Log("#Dipole evaluations:", NEvals)
 
-	for i := 0; i < 500; i++ {
-		CalcDemag()
-	}
-
-	//// output one layer
-	//for _, p := range Particles {
-	//	r := p.Center()
-	//	b := p.Bdemag().Div(p.Bdemag().Len()).Mul(1. / 16.) // normalize
-	//	if r[Z] == -0.46875 {
-	//		fmt.Println(r[X], r[Y], r[Z], b[X], b[Y], b[Z])
-	//	}
+	//for i := 0; i < 500; i++ {
+	//	CalcDemag()
 	//}
+
+	// output one layer
+	for _, p := range Particles {
+		r := p.Center()
+		b := p.Bdemag().Div(p.Bdemag().Len()).Mul(1. / 16.) // normalize
+		if r[Z] == -0.46875 {
+			fmt.Println(r[X], r[Y], r[Z], b[X], b[Y], b[Z])
+		}
+	}
 
 }
 
