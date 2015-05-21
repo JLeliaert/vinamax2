@@ -52,11 +52,13 @@ func initOutput() {
 
 }
 
-func writeString(s string) {
+// write to table (outputFile)
+func writeTable(msg ...interface{}) {
 	if outputFile == nil {
 		initOutput()
 	}
-
+	_, err := fmt.Fprint(outputFile, msg...)
+	check(err)
 }
 
 //Sets the interval at which Mul the output table has to be written
@@ -129,32 +131,23 @@ func nrmzpositive(lijst []*Particle) int {
 //Writes the header in table.txt
 func writeheader() {
 	header := fmt.Sprintf("#t\t<mx>\t<my>\t<mz>")
-	writeString(header)
+	writeTable(header)
 	if output_B_ext {
-		header := fmt.Sprintf("\tB_ext_x\tB_ext_y\tB_ext_z")
-		writeString(header)
+		writeTable("\tB_ext_x\tB_ext_y\tB_ext_z")
 	}
 	if output_Dt {
-		header := fmt.Sprintf("\tDt")
-		writeString(header)
+		writeTable("\tDt")
 	}
 	if output_nrmzpos {
-		header := fmt.Sprintf("\tnrmzpos")
-		writeString(header)
+		writeTable("\tnrmzpos")
 	}
 	if output_mdoth {
-		header := fmt.Sprintf("\tmdotH")
-		writeString(header)
+		writeTable("\tmdotH")
 	}
 	for i := range locations {
-
-		header = fmt.Sprintf("\t(B_x\tB_y\tB_z)@(%v,%v,%v)", locations[i][0], locations[i][1], locations[i][2])
-		writeString(header)
+		writeTable("\t(B_x\tB_y\tB_z)@(%v,%v,%v)", locations[i][0], locations[i][1], locations[i][2])
 	}
-
-	header = fmt.Sprintf("\n")
-	writeString(header)
-	check(err)
+	writeTable("\n")
 }
 
 //Adds the field at a specific location to the output table
@@ -172,32 +165,32 @@ func Tableadd_b_at_location(x, y, z float64) {
 func write(avg Vector) {
 	if twrite >= outputinterval && outputinterval != 0 {
 		string := fmt.Sprintf("%e\t%v\t%v\t%v", T, avg[0], avg[1], avg[2])
-		writeString(string)
+		writeTable(string)
 
 		if output_B_ext {
 			B_ext_x, B_ext_y, B_ext_z := B_ext(T)
 			string = fmt.Sprintf("\t%v\t%v\t%v", B_ext_x, B_ext_y, B_ext_z)
-			writeString(string)
+			writeTable(string)
 		}
 		if output_Dt {
 			string = fmt.Sprintf("\t%v", Dt)
-			writeString(string)
+			writeTable(string)
 		}
 		if output_nrmzpos {
 			string = fmt.Sprintf("\t%v", nrmzpositive(Particles))
-			writeString(string)
+			writeTable(string)
 		}
 		if output_mdoth {
 			string = fmt.Sprintf("\t%v", averagemdoth(Particles))
-			writeString(string)
+			writeTable(string)
 		}
 		for i := range locations {
 
 			//TODO	string = fmt.Sprintf("\t%v\t%v\t%v", (demag(locations[i][0], locations[i][1], locations[i][2])[0]), (demag(locations[i][0], locations[i][1], locations[i][2])[1]), (demag(locations[i][0], locations[i][1], locations[i][2])[2]))
 			string = fmt.Sprintf("\t%v", i)
-			writeString(string)
+			writeTable(string)
 		}
-		writeString("\n")
+		writeTable("\n")
 		twrite = 0.
 	}
 	twrite += Dt
