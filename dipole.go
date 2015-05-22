@@ -7,7 +7,7 @@ var NEvals int
 // Field generated at position R relative to dipole m
 func DipoleField(m, R Vector) Vector {
 
-	if R[X] == 0 && R[Y] == 0 && R[Z] == 0 {
+	if (R == Vector{0, 0, 0}) {
 		return Vector{0, 0, 0}
 		//return m.Mul(-1. / 3.) // self-demag for sphere
 	}
