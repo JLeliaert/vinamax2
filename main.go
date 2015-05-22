@@ -30,6 +30,7 @@ func main() {
 	worldSize := Vector{1, 1, 1}
 	NLEVEL := 5
 
+	Proximity = 1.5
 	InitFMM(worldSize, NLEVEL)
 
 	r := 1e-9
@@ -48,6 +49,7 @@ func main() {
 	AddParticle(NewParticle(hotcell.Center(), r, M, msat))
 
 	FMMOrder = 1
+	Log("Order:", FMMOrder, " Proxy:", Proximity)
 	CalcDemag()
 	Log("Demag error:", DemagError())
 

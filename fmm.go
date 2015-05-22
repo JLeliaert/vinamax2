@@ -12,7 +12,8 @@ var (
 	Level     [][]*Cell   // for each level of the FMM tree: all cells on that level. Root = level 0
 	Particles []*Particle // all particles, to be manipulated via Root.AddParticle
 
-	FMMOrder = 0
+	FMMOrder  = 0
+	Proximity = 1.1
 
 	// statistics:
 	totalPartners int

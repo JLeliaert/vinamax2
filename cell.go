@@ -207,9 +207,9 @@ func (c *Cell) IsLeaf() bool {
 
 // Are the cells considered far separated?
 func IsFar(a, b *Cell) bool {
-	// TODO: this is more or less a touch criterion: improve!
+	// TODO:  improve!
 	dist := a.center.Sub(b.center).Len()
-	return dist > 1.1*a.size.Len() // TODO
+	return dist > Proximity*a.size.Len()
 }
 
 // Create child cells to reach nLevels of levels and add to global level array.
