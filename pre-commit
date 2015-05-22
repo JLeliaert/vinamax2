@@ -10,6 +10,7 @@
 # Runs gofmt on the code and stops commit if files were affected.
 # 
 
+set -e
 
 if (gofmt -w -l */*.go */*/*.go | grep \.go); then exit 1; fi;
 go test
