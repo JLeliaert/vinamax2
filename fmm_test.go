@@ -72,16 +72,11 @@ func BenchmarkFMM5Levels1st(b *testing.B) {
 	}
 }
 
-// demag, 4096 particles, brute-force
-func BenchmarkFMM5LevelsBrute(b *testing.B) {
-	b.StopTimer()
-	b.ReportAllocs()
-
-	initBenchWorld(5)
-
-	b.StartTimer()
+func BenchmarkDipoleField(b *testing.B) {
+	m := Vector{1, 2, 3}
+	r := Vector{3, 4, 5}
 	for i := 0; i < b.N; i++ {
-		CalcDemagBrute()
+		DipoleField(m, r)
 	}
 }
 

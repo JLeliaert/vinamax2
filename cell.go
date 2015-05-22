@@ -102,8 +102,11 @@ func (c *Cell) addPartnerFields1() {
 // like addPartnerFields1, but 0th order.
 func (c *Cell) addPartnerFields0() {
 	for _, p := range c.partner {
-		r := c.center.Sub(p.center)
-		c.b0 = c.b0.Add(DipoleField(p.m, r))
+		r := Vector{c.center[X] - p.center[X], c.center[Y] - p.center[Y], c.center[Z] - p.center[Z]}
+		b := DipoleField(p.m, r)
+		c.b0[X] += b[X]
+		c.b0[Y] += b[Y]
+		c.b0[Z] += b[Z]
 	}
 }
 
