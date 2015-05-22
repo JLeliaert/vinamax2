@@ -10,7 +10,10 @@ func DemagError() float64 {
 
 	error := 0.0
 	for _, p := range Particles {
-		error += p.BruteDemag().Sub(p.Bdemag()).Len2()
+		brute := p.BruteDemag()
+		if brute.Len2() != 0 {
+			error += brute.Sub(p.Bdemag()).Len2() / brute.Len2()
+		}
 	}
 
 	error /= float64(len(Particles))

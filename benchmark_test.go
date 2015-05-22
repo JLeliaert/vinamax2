@@ -21,20 +21,6 @@ func BenchmarkFMM5Levels0th(b *testing.B) {
 }
 
 // demag, 5 levels, 4096 particles, 0th order, iterative
-func BenchmarkFMM5LevelsIter(b *testing.B) {
-	b.StopTimer()
-	b.ReportAllocs()
-
-	initBenchWorld(5)
-	FMMOrder = 0
-
-	b.StartTimer()
-	for i := 0; i < b.N; i++ {
-		CalcDemagIter()
-	}
-}
-
-// demag, 5 levels, 4096 particles, 0th order, iterative
 func BenchmarkFMM5Iter0th(b *testing.B) {
 	b.StopTimer()
 	b.ReportAllocs()

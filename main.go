@@ -30,7 +30,7 @@ func main() {
 	worldSize := Vector{1, 1, 1}
 	NLEVEL := 5
 
-	Proximity = 1.1
+	Proximity = 200
 	InitFMM(worldSize, NLEVEL)
 
 	r := 1e-9
@@ -39,30 +39,27 @@ func main() {
 	// place particles with m=0 , as field probes
 	baseLevel := Level[NLEVEL-1]
 	for _, c := range baseLevel {
-		M := Vector{}
+		M := Vector{1, 0, 0}
 		AddParticle(NewParticle(c.Center(), r, M, msat))
 	}
 
 	// place one magneticed particle as source
-	hotcell := baseLevel[0]
-	M := Vector{1, 0, 0}
-	AddParticle(NewParticle(hotcell.Center(), r, M, msat))
+	//M := Vector{1, 0, 0}
+	//AddParticle(NewParticle(Vector{-0.03125, -0.03125, -0.03125}, r, M, msat))
 
 	FMMOrder = 0
 	Log("Order:", FMMOrder, " Proxy:", Proximity)
-	//for i := 0; i < 500; i++ {
-	//	CalcDemag()
-	//}
-	CalcDemag()
+	for i := 0; i < 1; i++ {
+		CalcDemag()
+	}
 	Log("Demag error:", DemagError())
 
 	// output one layer
 	for _, p := range Particles {
 		r := p.Center()
-		//b := p.Bdemag()
 		b := p.Bdemag()
 		b = b.Div(b.Len()).Mul(1. / 16.) // normalize
-		if r[Z] == -0.46875 {
+		if r[Z] == -0.03125 {
 			fmt.Println(r[X], r[Y], r[Z], b[X], b[Y], b[Z])
 		}
 	}
