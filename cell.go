@@ -130,10 +130,7 @@ func (c *Cell) addNearFields(dst *Particle) {
 	for _, n := range c.near {
 		for _, src := range n.particles {
 			r := dst.center.Sub(src.center)
-			if r.Dot(r) != 0 { // exclude self
-				B := DipoleField(src.M, r)
-				dst.b = dst.b.Add(B)
-			}
+			dst.b = dst.b.Add(DipoleField(src.M, r))
 		}
 	}
 }

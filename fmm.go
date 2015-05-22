@@ -42,6 +42,8 @@ func CalcDemag() {
 		Root.updateBdemag0(&Root) // we abuse root as parent, it only propagetes zero fields
 	case 1:
 		Root.updateBdemag1(&Root)
+	case -1:
+		CalcDemagBrute()
 	}
 }
 

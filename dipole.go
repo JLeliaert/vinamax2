@@ -9,6 +9,11 @@ func DipoleField(m, R Vector) Vector {
 
 	NEvals++
 
+	zero := Vector{0, 0, 0}
+	if R == zero {
+		return zero
+	}
+
 	i_r2 := 1 / (R[X]*R[X] + R[Y]*R[Y] + R[Z]*R[Z])
 	i_r := math.Sqrt(i_r2)
 	i_r3 := i_r * i_r2

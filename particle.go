@@ -131,10 +131,8 @@ func (p *Particle) Center() Vector { return p.center }
 func (p *Particle) BruteDemag() Vector {
 	var B Vector
 	for _, src := range Particles {
-		if src != p { // exclude self
-			r := p.center.Sub(src.center)
-			B = B.Add(DipoleField(src.M, r))
-		}
+		r := p.center.Sub(src.center)
+		B = B.Add(DipoleField(src.M, r))
 	}
 	return B
 }

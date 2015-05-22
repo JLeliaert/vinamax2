@@ -41,8 +41,12 @@ func (a Vector) Sub(b Vector) Vector {
 
 // Returns the norm of v.
 func (v Vector) Len() float64 {
-	len2 := v.Dot(v)
-	return math.Sqrt(len2)
+	return math.Sqrt(v[X]*v[X] + v[Y]*v[Y] + v[Z]*v[Z])
+}
+
+// Returns the norm squared
+func (v Vector) Len2() float64 {
+	return v[X]*v[X] + v[Y]*v[Y] + v[Z]*v[Z]
 }
 
 //sets norm of a vector to one

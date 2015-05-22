@@ -47,11 +47,9 @@ func main() {
 	M := Vector{1, 0, 0}
 	AddParticle(NewParticle(hotcell.Center(), r, M, msat))
 
-	//CalcDemag()
-
-	//for i := 0; i < 500; i++ {
-	//	CalcDemag()
-	//}
+	FMMOrder = 1
+	CalcDemag()
+	Log("Demag error:", DemagError())
 
 	// output one layer
 	for _, p := range Particles {
