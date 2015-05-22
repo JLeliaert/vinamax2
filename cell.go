@@ -44,32 +44,6 @@ func (c *Cell) contains(x Vector) bool {
 	return d[X] <= size[X] && d[Y] <= size[Y] && d[Z] <= size[Z]
 }
 
-// Recursively calculate magnetostatic field via the FMM method, 1st-order.
-// Precondition: Root.updateM() has been called.
-func (c *Cell) updateBdemag1(parent *Cell) {
-	if c == nil {
-		return
-	}
-
-	// propagate parent field expansion to this cell,
-	// (applies shift to Taylor expansion)
-	sh := parent.center.Sub(c.center)
-	c.b0 = parent.b0.MAdd(sh[X], parent.dbdx).MAdd(sh[Y], parent.dbdy).MAdd(sh[Z], parent.dbdz)
-	c.dbdx = parent.dbdx
-	c.dbdy = parent.dbdy
-	c.dbdz = parent.dbdz
-
-	c.addPartnerFields1()
-
-	if !c.IsLeaf() {
-		for _, ch := range c.child {
-			ch.updateBdemag1(c)
-		}
-	} else {
-		c.addNearFields1()
-	}
-}
-
 // Like updateBdemag1, but 0th-order.
 func (c *Cell) updateBdemag0(parent *Cell) {
 	if c == nil {
@@ -104,17 +78,6 @@ func calcDemagIter() {
 	}
 }
 
-// add expansions of fields of partner sources
-func (c *Cell) addPartnerFields1() {
-	for _, p := range c.partner {
-		r := c.center.Sub(p.center)
-		c.b0 = c.b0.Add(DipoleField(p.m, r))
-		c.dbdx = c.dbdx.Add(DiffDipole(X, p.m, r))
-		c.dbdy = c.dbdy.Add(DiffDipole(Y, p.m, r))
-		c.dbdz = c.dbdz.Add(DiffDipole(Z, p.m, r))
-	}
-}
-
 // like addPartnerFields1, but 0th order.
 func (c *Cell) addPartnerFields0() {
 	for _, p := range c.partner {
@@ -123,16 +86,6 @@ func (c *Cell) addPartnerFields0() {
 		c.b0[X] += b[X]
 		c.b0[Y] += b[Y]
 		c.b0[Z] += b[Z]
-	}
-}
-
-// Add demag of nearby particles by brute force,
-// start with 1st order evaluation of field in cell.
-func (c *Cell) addNearFields1() {
-	for _, dst := range c.particles {
-		sh := dst.center.Sub(c.center)
-		dst.b = c.b0.MAdd(sh[X], c.dbdx).MAdd(sh[Y], c.dbdy).MAdd(sh[Z], c.dbdz)
-		c.addNearFields(dst)
 	}
 }
 
