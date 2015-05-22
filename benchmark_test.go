@@ -20,6 +20,19 @@ func BenchmarkFMM5Levels0th(b *testing.B) {
 	}
 }
 
+func BenchmarkFMM5LevelsParallel(b *testing.B) {
+	b.StopTimer()
+	b.ReportAllocs()
+
+	initBenchWorld(5)
+	CalcDemagParallel() // spin-up workers once
+
+	b.StartTimer()
+	for i := 0; i < b.N; i++ {
+		CalcDemagParallel()
+	}
+}
+
 // demag, 5 levels, 4096 particles, 1st order
 func BenchmarkFMM5Levels1st(b *testing.B) {
 	b.StopTimer()

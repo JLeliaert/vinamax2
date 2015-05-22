@@ -3,6 +3,7 @@ package vinamax2
 import (
 	"fmt"
 	"math"
+	"runtime"
 	"time"
 )
 
@@ -45,6 +46,47 @@ func CalcDemag() {
 		Root.updateBdemag1(&Root)
 	case -1:
 		CalcDemagBrute()
+	}
+}
+
+var (
+	ch   chan *Cell
+	done chan struct{}
+)
+
+// EXPERIMENTAL
+func CalcDemagParallel() {
+
+	NCPU := 3
+
+	if ch == nil {
+		ch = make(chan *Cell, 8*8)
+		done = make(chan struct{}, 8*8)
+		runtime.GOMAXPROCS(NCPU)
+		for i := 0; i < NCPU; i++ {
+			go func() {
+				Log("spinning up worker")
+				for c := range ch {
+					c.updateBdemag0(&Root)
+					done <- struct{}{}
+				}
+			}()
+		}
+	}
+
+	Root.updateM()
+
+	Root.b0 = Vector{0, 0, 0}
+
+	for _, c := range Root.child {
+		for _, c := range c.child {
+			ch <- c
+		}
+	}
+	for _, c := range Root.child {
+		for _, _ = range c.child {
+			<-done
+		}
 	}
 }
 

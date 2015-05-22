@@ -4,7 +4,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"math"
 
 	. "."
@@ -28,9 +27,9 @@ func main() {
 	}
 
 	worldSize := Vector{1, 1, 1}
-	NLEVEL := 5
+	NLEVEL := 6
 
-	Proximity = 200
+	Proximity = 1.1
 	InitFMM(worldSize, NLEVEL)
 
 	r := 1e-9
@@ -39,30 +38,31 @@ func main() {
 	// place particles with m=0 , as field probes
 	baseLevel := Level[NLEVEL-1]
 	for _, c := range baseLevel {
-		M := Vector{1, 0, 0}
+		M := Vector{0, 0, 0}
 		AddParticle(NewParticle(c.Center(), r, M, msat))
 	}
 
 	// place one magneticed particle as source
-	//M := Vector{1, 0, 0}
-	//AddParticle(NewParticle(Vector{-0.03125, -0.03125, -0.03125}, r, M, msat))
+	M := Vector{1, 0, 0}
+	AddParticle(NewParticle(Vector{-0.03125, -0.03125, -0.03125}, r, M, msat))
 
 	FMMOrder = 0
 	Log("Order:", FMMOrder, " Proxy:", Proximity)
-	for i := 0; i < 1; i++ {
-		CalcDemag()
+	for i := 0; i < 1000; i++ {
+		println(i)
+		CalcDemagParallel()
 	}
-	Log("Demag error:", DemagError())
+	//Log("Demag error:", DemagError())
 
 	// output one layer
-	for _, p := range Particles {
-		r := p.Center()
-		b := p.Bdemag()
-		b = b.Div(b.Len()).Mul(1. / 16.) // normalize
-		if r[Z] == -0.03125 {
-			fmt.Println(r[X], r[Y], r[Z], b[X], b[Y], b[Z])
-		}
-	}
+	//for _, p := range Particles {
+	//	r := p.Center()
+	//	b := p.Bdemag()
+	//	b = b.Div(b.Len()).Mul(1. / 16.) // normalize
+	//	if r[Z] == -0.03125 {
+	//		fmt.Println(r[X], r[Y], r[Z], b[X], b[Y], b[Z])
+	//	}
+	//}
 
 	Log("#Dipole evaluations:", NEvals)
 
