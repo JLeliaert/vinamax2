@@ -4,6 +4,7 @@ import "fmt"
 
 // Cell in the FMM tree
 type Cell struct {
+	parent           *Cell       //parent cell, or nil
 	child            [8]*Cell    // octree of child cells
 	partner          []*Cell     // I receive field taylor expansions from these cells
 	near             []*Cell     // I recieve brute-force field contributions form these cells
@@ -84,6 +85,21 @@ func (c *Cell) updateBdemag0(parent *Cell) {
 			ch.updateBdemag0(c)
 		}
 	} else {
+		c.addNearFields0()
+	}
+}
+
+func calcDemagIter() {
+	Root.updateM()
+	Root.b0 = Vector{0, 0, 0}
+	for i := 1; i < len(Level)-1; i++ {
+		for _, c := range Level[i] {
+			c.b0 = c.parent.b0
+			c.addPartnerFields0()
+		}
+	}
+	for _, c := range Level[len(Level)-1] {
+		c.b0 = c.parent.b0
 		c.addNearFields0()
 	}
 }
@@ -233,7 +249,7 @@ func (c *Cell) Divide(nLevels int) {
 	for i := range c.child {
 		newSize := c.size.Div(2)
 		newCenter := c.center.Add(direction[i].Mul3(newSize.Div(2)))
-		c.child[i] = &Cell{center: newCenter, size: newSize}
+		c.child[i] = &Cell{parent: c, center: newCenter, size: newSize}
 	}
 
 	// recursively go further
