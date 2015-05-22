@@ -30,7 +30,7 @@ func BenchmarkFMM5LevelsIter(b *testing.B) {
 
 	b.StartTimer()
 	for i := 0; i < b.N; i++ {
-		calcDemagIter()
+		CalcDemagIter()
 	}
 }
 

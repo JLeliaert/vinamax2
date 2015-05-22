@@ -18,6 +18,8 @@ func TestFMM0th(t *testing.T) {
 
 	CalcDemag()
 	CalcDemag()
+	CalcDemag()
+	CalcDemag()
 
 	var Btotal Vector
 	for _, p := range Particles {
@@ -35,25 +37,25 @@ func TestFMM0th(t *testing.T) {
 
 // Test average field of one spin, iterative implementation
 // against 0-order solution from 2015-05-20 (Arne)
-//func TestFMM0thIter(t *testing.T) {
-//
-//	initTestWorld()
-//
-//	calcDemagIter()
-//
-//	var Btotal Vector
-//	for _, p := range Particles {
-//		Btotal = Btotal.Add(p.b)
-//	}
-//
-//	solution := Vector{5850.136490409946, 4680.109192327974, 3510.08189424605}
-//
-//	tol := 1e-6
-//	if Btotal.Sub(solution).Len() > tol {
-//		t.Error("got:", Btotal, "expected:", solution)
-//	}
-//
-//}
+func TestFMM0thIter(t *testing.T) {
+
+	initTestWorld()
+
+	CalcDemagIter()
+
+	var Btotal Vector
+	for _, p := range Particles {
+		Btotal = Btotal.Add(p.b)
+	}
+
+	solution := Vector{5850.136490409946, 4680.109192327974, 3510.08189424605}
+
+	tol := 1e-6
+	if Btotal.Sub(solution).Len() > tol {
+		t.Error("got:", Btotal, "expected:", solution)
+	}
+
+}
 
 func initTestWorld() {
 	worldSize := Vector{1, 1, 1}

@@ -63,7 +63,7 @@ func (c *Cell) updateBdemag0(parent *Cell) {
 	}
 }
 
-func calcDemagIter() {
+func CalcDemagIter() {
 	Root.updateM()
 	Root.b0 = Vector{0, 0, 0}
 	for i := 1; i < len(Level)-1; i++ {
@@ -74,6 +74,7 @@ func calcDemagIter() {
 	}
 	for _, c := range Level[len(Level)-1] {
 		c.b0 = c.parent.b0
+		c.addPartnerFields0()
 		c.addNearFields0()
 	}
 }
