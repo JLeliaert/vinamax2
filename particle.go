@@ -126,3 +126,15 @@ func Msat(x float64) {
 // TODO (j): just export b field + rename
 func (p *Particle) Bdemag() Vector { return p.b }
 func (p *Particle) Center() Vector { return p.center }
+
+// Brute-force demag calculation for debugging.
+func (p *Particle) BruteDemag() Vector {
+	var B Vector
+	for _, src := range Particles {
+		if src != p { // exclude self
+			r := p.center.Sub(src.center)
+			B = B.Add(DipoleField(src.M, r))
+		}
+	}
+	return B
+}

@@ -16,7 +16,6 @@ func DipoleField(m, R Vector) Vector {
 
 	m_R := m.Dot(R)
 
-	// TODO: use vectors
 	Bx := (1 / (4 * math.Pi)) * ((i3_r5 * m_R * R[X]) - (i_r3 * m[X]))
 	By := (1 / (4 * math.Pi)) * ((i3_r5 * m_R * R[Y]) - (i_r3 * m[Y]))
 	Bz := (1 / (4 * math.Pi)) * ((i3_r5 * m_R * R[Z]) - (i_r3 * m[Z]))
@@ -68,7 +67,7 @@ func d(c, i int, m, R Vector) float64 {
 func ddiag(i int, m, R Vector) float64 {
 	x := R[i]
 	r2 := R.Dot(R)
-	pre := 1 / (4 * math.Pi)
+	pre := -1 / (4 * math.Pi)
 	return pre * (3*x*m.Dot(R)/math.Pow(r2, 5./2.) - m[i]/math.Pow(r2, 3./2.))
 }
 
