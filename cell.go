@@ -43,9 +43,9 @@ func (c *Cell) contains(x Vector) bool {
 	return d[X] <= size[X] && d[Y] <= size[Y] && d[Z] <= size[Z]
 }
 
-// Recursively calculate magnetostatic field via the FMM method.
+// Recursively calculate magnetostatic field via the FMM method, 1st-order.
 // Precondition: Root.updateM() has been called.
-func (c *Cell) updateBdemag(parent *Cell) {
+func (c *Cell) updateBdemag1(parent *Cell) {
 	if c == nil {
 		return
 	}
@@ -58,23 +58,40 @@ func (c *Cell) updateBdemag(parent *Cell) {
 	c.dbdy = parent.dbdy
 	c.dbdz = parent.dbdz
 
-	c.addPartnerFields()
+	c.addPartnerFields1()
 
 	if !c.IsLeaf() {
-		// propagete field to children
 		for _, ch := range c.child {
-			ch.updateBdemag(c)
+			ch.updateBdemag1(c)
 		}
 	} else {
-		c.addNearFields()
+		c.addNearFields1()
+	}
+}
+
+// Like updateBdemag1, but 0th-order.
+func (c *Cell) updateBdemag0(parent *Cell) {
+	if c == nil {
+		return
+	}
+
+	// use parent field in this cell
+	c.b0 = parent.b0
+	c.addPartnerFields0()
+
+	if !c.IsLeaf() {
+		for _, ch := range c.child {
+			ch.updateBdemag0(c)
+		}
+	} else {
+		c.addNearFields0()
 	}
 }
 
 // add expansions of fields of partner sources
-func (c *Cell) addPartnerFields() {
+func (c *Cell) addPartnerFields1() {
 	for _, p := range c.partner {
 		r := c.center.Sub(p.center)
-
 		c.b0 = c.b0.Add(DipoleField(p.m, r))
 		c.dbdx = c.dbdx.Add(DiffDipole(X, p.m, r))
 		c.dbdy = c.dbdy.Add(DiffDipole(Y, p.m, r))
@@ -82,22 +99,40 @@ func (c *Cell) addPartnerFields() {
 	}
 }
 
-// Add demag of nearby particles by brute force
-func (c *Cell) addNearFields() {
-	for _, dst := range c.particles {
+// like addPartnerFields1, but 0th order.
+func (c *Cell) addPartnerFields0() {
+	for _, p := range c.partner {
+		r := c.center.Sub(p.center)
+		c.b0 = c.b0.Add(DipoleField(p.m, r))
+	}
+}
 
-		// start with field from cell's Taylor expansion:
+// Add demag of nearby particles by brute force,
+// start with 1st order evaluation of field in cell.
+func (c *Cell) addNearFields1() {
+	for _, dst := range c.particles {
 		sh := dst.center.Sub(c.center)
 		dst.b = c.b0.MAdd(sh[X], c.dbdx).MAdd(sh[Y], c.dbdy).MAdd(sh[Z], c.dbdz)
+		c.addNearFields(dst)
+	}
+}
 
-		// then add, in a brute-force way, the near particle's fields
-		for _, n := range c.near {
-			for _, src := range n.particles {
-				r := dst.center.Sub(src.center)
-				if r.Dot(r) != 0 { // exclude self
-					B := DipoleField(src.M, r)
-					dst.b = dst.b.Add(B)
-				}
+// Like addNearFields1, but 0th-order.
+func (c *Cell) addNearFields0() {
+	for _, dst := range c.particles {
+		dst.b = c.b0
+		c.addNearFields(dst)
+	}
+}
+
+// add, in a brute-force way, the near particle's fields, to p
+func (c *Cell) addNearFields(dst *Particle) {
+	for _, n := range c.near {
+		for _, src := range n.particles {
+			r := dst.center.Sub(src.center)
+			if r.Dot(r) != 0 { // exclude self
+				B := DipoleField(src.M, r)
+				dst.b = dst.b.Add(B)
 			}
 		}
 	}

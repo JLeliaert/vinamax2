@@ -1,6 +1,7 @@
 package vinamax2
 
 import (
+	"fmt"
 	"math"
 	"time"
 )
@@ -10,6 +11,8 @@ var (
 	Root      Cell        // roots the entire FMM tree
 	Level     [][]*Cell   // for each level of the FMM tree: all cells on that level. Root = level 0
 	Particles []*Particle // all particles, to be manipulated via Root.AddParticle
+
+	FMMOrder = 0
 
 	// statistics:
 	totalPartners int
@@ -32,7 +35,20 @@ func CalcDemag() {
 	Root.dbdy = Vector{0, 0, 0}
 	Root.dbdz = Vector{0, 0, 0}
 
-	Root.updateBdemag(&Root) // we abuse root as parent, it only propagetes zero fields
+	switch FMMOrder {
+	default:
+		panic(fmt.Sprint("invalid FMMOrder:", FMMOrder))
+	case 0:
+		Root.updateBdemag0(&Root) // we abuse root as parent, it only propagetes zero fields
+	case 1:
+		Root.updateBdemag1(&Root)
+	}
+}
+
+func CalcDemagBrute() {
+	for _, p := range Particles {
+		p.b = p.BruteDemag()
+	}
 }
 
 // Initializes the global FMM variables Root, Level
