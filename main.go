@@ -4,6 +4,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"math"
 
 	. "."
@@ -27,7 +28,7 @@ func main() {
 	}
 
 	worldSize := Vector{1, 1, 1}
-	NLEVEL := 6
+	NLEVEL := 5
 
 	Proximity = 1.1
 	InitFMM(worldSize, NLEVEL)
@@ -48,21 +49,21 @@ func main() {
 
 	FMMOrder = 0
 	Log("Order:", FMMOrder, " Proxy:", Proximity)
-	for i := 0; i < 1000; i++ {
+	for i := 0; i < 1; i++ {
 		println(i)
 		CalcDemagParallel()
 	}
-	//Log("Demag error:", DemagError())
+	Log("Demag error:", DemagError())
 
 	// output one layer
-	//for _, p := range Particles {
-	//	r := p.Center()
-	//	b := p.Bdemag()
-	//	b = b.Div(b.Len()).Mul(1. / 16.) // normalize
-	//	if r[Z] == -0.03125 {
-	//		fmt.Println(r[X], r[Y], r[Z], b[X], b[Y], b[Z])
-	//	}
-	//}
+	for _, p := range Particles {
+		r := p.Center()
+		b := p.Bdemag()
+		b = b.Div(b.Len()).Mul(1. / 16.) // normalize
+		if r[Z] == -0.03125 {
+			fmt.Println(r[X], r[Y], r[Z], b[X], b[Y], b[Z])
+		}
+	}
 
 	Log("#Dipole evaluations:", NEvals)
 
