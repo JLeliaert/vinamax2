@@ -4,6 +4,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"math"
 
 	. "."
@@ -49,21 +50,22 @@ func main() {
 
 	FMMOrder = 0
 	Log("Order:", FMMOrder, " Proxy:", Proximity)
-	for i := 0; i < 500; i++ {
-		CalcDemag()
-	}
-	//Log("Demag error:", DemagError())
+	//for i := 0; i < 500; i++ {
+	//	CalcDemag()
+	//}
+	CalcDemag()
+	Log("Demag error:", DemagError())
 
 	// output one layer
-	//for _, p := range Particles {
-	//	r := p.Center()
-	//	//b := p.Bdemag()
-	//	b := p.BruteDemag()
-	//	b = b.Div(b.Len()).Mul(1. / 16.) // normalize
-	//	if r[Z] == -0.46875 {
-	//		fmt.Println(r[X], r[Y], r[Z], b[X], b[Y], b[Z])
-	//	}
-	//}
+	for _, p := range Particles {
+		r := p.Center()
+		//b := p.Bdemag()
+		b := p.Bdemag()
+		b = b.Div(b.Len()).Mul(1. / 16.) // normalize
+		if r[Z] == -0.46875 {
+			fmt.Println(r[X], r[Y], r[Z], b[X], b[Y], b[Z])
+		}
+	}
 
 	Log("#Dipole evaluations:", NEvals)
 
