@@ -47,7 +47,7 @@ func main() {
 	M := Vector{1, 0, 0}
 	AddParticle(NewParticle(Vector{-0.03125, -0.03125, -0.03125}, r, M, msat))
 
-	FMMOrder = 0
+	FMMOrder = 1
 	Log("Order:", FMMOrder, " Proxy:", Proximity)
 	for i := 0; i < 1; i++ {
 		println(i)

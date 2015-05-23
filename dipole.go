@@ -70,10 +70,10 @@ func d(c, i int, m, R Vector) float64 {
 
 // dBx/dx = 3*x*(m1*x+m2*y+m3*z)/(x^2+y^2+z^2)^(5/2) - m1/(x^2+y^2+z^2)^(3/2)
 func ddiag(i int, m, R Vector) float64 {
-	x := R[i]
 	r2 := R.Dot(R)
 	pre := 1 / (4 * math.Pi)
-	return pre * (3*x*m.Dot(R)/math.Pow(r2, 5./2.) - m[i]/math.Pow(r2, 3./2.))
+//	return pre * (3*x*m.Dot(R)/math.Pow(r2, 5./2.) - m[i]/math.Pow(r2, 3./2.))
+	return pre * 3*m.Dot(R)/math.Pow(r2, 5./2.) + doff(i,i,m,R)
 }
 
 // dBx/dy = -15xy mdotR / r^7 + 3y m_x/r^5 + 3m_y x / r^5
@@ -83,6 +83,6 @@ func doff(c, i int, m, R Vector) float64 {
 	m_x := m[c]
 	m_y := m[i]
 	r2 := R.Dot(R)
-	pre := -1 / (4 * math.Pi) // minus sign gives best accuracy but should not be here, what's wrong?
+	pre := 1 / (4 * math.Pi) // minus sign gives best accuracy but should not be here, what's wrong?
 	return pre * (-15*x*y*m.Dot(R)/math.Pow(r2, 7./2.) + 3*y*m_x/math.Pow(r2, 5./2.) + 3*m_y*x/math.Pow(r2, 5./2.))
 }
