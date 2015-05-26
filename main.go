@@ -64,7 +64,6 @@ func main() {
 			fmt.Println(r[X], r[Y], r[Z], b[X], b[Y], b[Z])
 		}
 	}
-
 	Log("#Dipole evaluations:", NEvals)
 
 }

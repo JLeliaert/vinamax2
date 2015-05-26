@@ -573,7 +573,7 @@ func fehl56step(Lijst []*Particle) {
 		p.tempfield = temp
 		p.k1 = p.tau(temp)
 
-		p.M=p.M.MAdd(1/6.*Dt,p.k1)
+		p.M = p.M.MAdd(1/6.*Dt, p.k1)
 		//p.M[0] += k1[0] * 1 / 6. * Dt
 		//p.M[1] += k1[1] * 1 / 6. * Dt
 		//p.M[2] += k1[2] * 1 / 6. * Dt
@@ -588,7 +588,7 @@ func fehl56step(Lijst []*Particle) {
 		temp := p.tempfield
 		p.k2 = p.tau(temp)
 
-		p.M = p.tempm.MAdd(4/75.*Dt,p.k1).MAdd(16/75.*Dt,p.k2)
+		p.M = p.tempm.MAdd(4/75.*Dt, p.k1).MAdd(16/75.*Dt, p.k2)
 		//p.M = p.tempm
 		//p.M[0] += ((4/75.*k1[0] + 16/75.*k2[0]) * Dt)
 		//p.M[1] += ((4/75.*k1[1] + 16/75.*k2[1]) * Dt)
@@ -602,7 +602,7 @@ func fehl56step(Lijst []*Particle) {
 		temp := p.tempfield
 		p.k3 = p.tau(temp)
 
-		p.M = p.tempm.MAdd(5/6.*Dt,p.k1).MAdd(-8/3.*Dt,p.k2).MAdd(5/2.*Dt,p.k3)
+		p.M = p.tempm.MAdd(5/6.*Dt, p.k1).MAdd(-8/3.*Dt, p.k2).MAdd(5/2.*Dt, p.k3)
 		//p.M = p.tempm
 		//p.M[0] += ((5/6.*k1[0] - 8/3.*k2[0] + 5/2.*k3[0]) * Dt)
 		//p.M[1] += ((5/6.*k1[1] - 8/3.*k2[1] + 5/2.*k3[1]) * Dt)
@@ -616,7 +616,7 @@ func fehl56step(Lijst []*Particle) {
 		temp := p.tempfield
 		p.k4 = p.tau(temp)
 
-		p.M = p.tempm.MAdd(-8/5.*Dt,p.k1).MAdd(144/25.*Dt,p.k2).MAdd(-4.*Dt,p.k3).MAdd(16/25.*Dt,p.k4)
+		p.M = p.tempm.MAdd(-8/5.*Dt, p.k1).MAdd(144/25.*Dt, p.k2).MAdd(-4.*Dt, p.k3).MAdd(16/25.*Dt, p.k4)
 		//p.M = p.tempm
 		//p.M[0] += ((-8/5.*k1[0] + 144/25.*k2[0] - 4.*k3[0] + 16/25.*k4[0]) * Dt)
 		//p.M[1] += ((-8/5.*k1[1] + 144/25.*k2[1] - 4.*k3[1] + 16/25.*k4[1]) * Dt)
@@ -630,7 +630,7 @@ func fehl56step(Lijst []*Particle) {
 		temp := p.tempfield
 		p.k5 = p.tau(temp)
 
-		p.M = p.tempm.MAdd(361/320.*Dt,p.k1).MAdd(-18/5.*Dt,p.k2).MAdd(407/128.*Dt,p.k3).MAdd(-11/80.*Dt,p.k4).MAdd(55/128.*Dt,p.k5)
+		p.M = p.tempm.MAdd(361/320.*Dt, p.k1).MAdd(-18/5.*Dt, p.k2).MAdd(407/128.*Dt, p.k3).MAdd(-11/80.*Dt, p.k4).MAdd(55/128.*Dt, p.k5)
 		//p.M = p.tempm
 		//p.M[0] += ((361/320.*k1[0] - 18/5.*k2[0] + 407/128.*k3[0] - 11/80.*k4[0] + 55/128.*k5[0]) * Dt)
 		//p.M[1] += ((361/320.*k1[1] - 18/5.*k2[1] + 407/128.*k3[1] - 11/80.*k4[1] + 55/128.*k5[1]) * Dt)
@@ -645,7 +645,7 @@ func fehl56step(Lijst []*Particle) {
 		temp := p.tempfield
 		p.k6 = p.tau(temp)
 
-		p.M = p.tempm.MAdd(-11/640.*Dt,p.k1).MAdd(11/256.*Dt,p.k3).MAdd(-11/160.*Dt,p.k4).MAdd(11/256.*Dt,p.k5)
+		p.M = p.tempm.MAdd(-11/640.*Dt, p.k1).MAdd(11/256.*Dt, p.k3).MAdd(-11/160.*Dt, p.k4).MAdd(11/256.*Dt, p.k5)
 		//p.M = p.tempm
 		//p.M[0] += ((-11/640.*k1[0] + 0.*k2[0] + 11/256.*k3[0] - 11/160.*k4[0] + 11/256.*k5[0] + 0.*k6[0]) * Dt)
 		//p.M[1] += ((-11/640.*k1[1] + 0.*k2[1] + 11/256.*k3[1] - 11/160.*k4[1] + 11/256.*k5[1] + 0.*k6[1]) * Dt)
@@ -660,7 +660,7 @@ func fehl56step(Lijst []*Particle) {
 		temp := p.tempfield
 		p.k7 = p.tau(temp)
 
-		p.M =p.tempm.MAdd(93/640.*Dt,p.k1).MAdd(-18/5.*Dt,p.k2).MAdd(803/256.*Dt,p.k3).MAdd(-11/160.*Dt,p.k4).MAdd(99/256.*Dt,p.k5).MAdd(Dt,p.k7)
+		p.M = p.tempm.MAdd(93/640.*Dt, p.k1).MAdd(-18/5.*Dt, p.k2).MAdd(803/256.*Dt, p.k3).MAdd(-11/160.*Dt, p.k4).MAdd(99/256.*Dt, p.k5).MAdd(Dt, p.k7)
 		//p.M = p.tempm
 		//p.M[0] += ((93/640.*k1[0] + -18/5.*k2[0] + 803/256.*k3[0] - 11/160.*k4[0] + 99/256.*k5[0] + 0.*k6[0] + 1/1.*k7[0]) * Dt)
 		//p.M[1] += ((93/640.*k1[1] + -18/5.*k2[1] + 803/256.*k3[1] - 11/160.*k4[1] + 99/256.*k5[1] + 0.*k6[1] + 1/1.*k7[1]) * Dt)
@@ -672,14 +672,14 @@ func fehl56step(Lijst []*Particle) {
 		temp := p.tempfield
 		p.k8 = p.tau(temp)
 
-		p.M=p.tempm.MAdd(31/384.*Dt,p.k1).MAdd(1125/2816.*Dt,p.k3).MAdd(9/32.*Dt,p.k4).MAdd(125/768.*Dt,p.k5).MAdd(5/66.*Dt,p.k6)
+		p.M = p.tempm.MAdd(31/384.*Dt, p.k1).MAdd(1125/2816.*Dt, p.k3).MAdd(9/32.*Dt, p.k4).MAdd(125/768.*Dt, p.k5).MAdd(5/66.*Dt, p.k6)
 		//p.M = p.tempm
 		//p.tempm[0] += ((31/384.*k1[0] + 0.*k2[0] + 1125/2816.*k3[0] + 9/32.*k4[0] + 125/768.*k5[0] + 5/66.*k6[0] + 0/1.*k7[0]) * Dt)
 		//p.tempm[1] += ((31/384.*k1[1] + 0.*k2[1] + 1125/2816.*k3[1] + 9/32.*k4[1] + 125/768.*k5[1] + 5/66.*k6[1] + 0/1.*k7[1]) * Dt)
 		//p.tempm[2] += ((31/384.*k1[2] + 0.*k2[2] + 1125/2816.*k3[2] + 9/32.*k4[2] + 125/768.*k5[2] + 5/66.*k6[2] + 0/1.*k7[2]) * Dt)
 		//fifth order solution
 
-		p.M = p.tempm.MAdd(-5/66.*Dt,p.k1).MAdd(-5/66.*Dt,p.k6).MAdd(5/66.*Dt,p.k7).MAdd(5/66.*Dt,p.k8)
+		p.M = p.tempm.MAdd(-5/66.*Dt, p.k1).MAdd(-5/66.*Dt, p.k6).MAdd(5/66.*Dt, p.k7).MAdd(5/66.*Dt, p.k8)
 		//p.M[0] = p.tempm[0] + ((-5/66.*k1[0] + -5/66.*k6[0] + 5/66.*k7[0] + 5/66.*k8[0]) * Dt)
 		//p.M[1] = p.tempm[1] + ((-5/66.*k1[1] + -5/66.*k6[1] + 5/66.*k7[1] + 5/66.*k8[1]) * Dt)
 		//p.M[2] = p.tempm[2] + ((-5/66.*k1[2] + -5/66.*k6[2] + 5/66.*k7[2] + 5/66.*k8[2]) * Dt)
@@ -718,7 +718,7 @@ func fehl67step(Lijst []*Particle) {
 		p.tempfield = temp
 		p.k1 = p.tau(temp)
 
-		p.M=p.M.MAdd(2/27.*Dt,p.k1)
+		p.M = p.M.MAdd(2/27.*Dt, p.k1)
 		//p.M[0] += k1[0] * 2 / 27. * Dt
 		//p.M[1] += k1[1] * 2 / 27. * Dt
 		//p.M[2] += k1[2] * 2 / 27. * Dt
@@ -733,7 +733,7 @@ func fehl67step(Lijst []*Particle) {
 		temp := p.tempfield
 		p.k2 = p.tau(temp)
 
-		p.M=p.tempm.MAdd(1/36.*Dt,p.k1).MAdd(1/12.*Dt,p.k2)
+		p.M = p.tempm.MAdd(1/36.*Dt, p.k1).MAdd(1/12.*Dt, p.k2)
 		//p.M = p.tempm
 		//p.M[0] += ((1/36.*k1[0] + 1/12.*k2[0]) * Dt)
 		//p.M[1] += ((1/36.*k1[1] + 1/12.*k2[1]) * Dt)
@@ -747,7 +747,7 @@ func fehl67step(Lijst []*Particle) {
 		temp := p.tempfield
 		p.k3 = p.tau(temp)
 
-		p.M=p.tempm.MAdd(1/24.*Dt,p.k1).MAdd(1/8.*Dt,p.k3)
+		p.M = p.tempm.MAdd(1/24.*Dt, p.k1).MAdd(1/8.*Dt, p.k3)
 		//p.M = p.tempm
 		//p.M[0] += ((1/24.*k1[0] + 0.*k2[0] + 1/8.*k3[0]) * Dt)
 		//p.M[1] += ((1/24.*k1[1] + 0.*k2[1] + 1/8.*k3[1]) * Dt)
@@ -761,7 +761,7 @@ func fehl67step(Lijst []*Particle) {
 		temp := p.tempfield
 		p.k4 = p.tau(temp)
 
-		p.M=p.tempm.MAdd(5/12.*Dt,p.k1).MAdd(-25/16.*Dt,p.k3).MAdd(25/16.*Dt,p.k4)
+		p.M = p.tempm.MAdd(5/12.*Dt, p.k1).MAdd(-25/16.*Dt, p.k3).MAdd(25/16.*Dt, p.k4)
 		//p.M = p.tempm
 		//p.M[0] += ((5/12.*k1[0] + 0.*k2[0] - 25/16.*k3[0] + 25/16.*k4[0]) * Dt)
 		//p.M[1] += ((5/12.*k1[1] + 0.*k2[1] - 25/16.*k3[1] + 25/16.*k4[1]) * Dt)
@@ -775,7 +775,7 @@ func fehl67step(Lijst []*Particle) {
 		temp := p.tempfield
 		p.k5 = p.tau(temp)
 
-		p.M=p.tempm.MAdd(1/20.*Dt,p.k1).MAdd(1/4.*Dt,p.k4).MAdd(1/5.*Dt,p.k5)
+		p.M = p.tempm.MAdd(1/20.*Dt, p.k1).MAdd(1/4.*Dt, p.k4).MAdd(1/5.*Dt, p.k5)
 		//p.M = p.tempm
 		//p.M[0] += ((1/20.*k1[0] + 0.*k2[0] + 0.*k3[0] + 1/4.*k4[0] + 1/5.*k5[0]) * Dt)
 		//p.M[1] += ((1/20.*k1[1] + 0.*k2[1] + 0.*k3[1] + 1/4.*k4[1] + 1/5.*k5[1]) * Dt)
@@ -790,7 +790,7 @@ func fehl67step(Lijst []*Particle) {
 		temp := p.tempfield
 		p.k6 = p.tau(temp)
 
-		p.M=p.tempm.MAdd(-25/108.*Dt,p.k1).MAdd(125/108.*Dt,p.k4).MAdd(-65/27.*Dt,p.k5).MAdd( 125/54.*Dt,p.k6)
+		p.M = p.tempm.MAdd(-25/108.*Dt, p.k1).MAdd(125/108.*Dt, p.k4).MAdd(-65/27.*Dt, p.k5).MAdd(125/54.*Dt, p.k6)
 		//p.M = p.tempm
 		//p.M[0] += ((-25/108.*k1[0] + 0.*k2[0] + 0.*k3[0] + 125/108.*k4[0] - 65/27.*k5[0] + 125/54.*k6[0]) * Dt)
 		//p.M[1] += ((-25/108.*k1[1] + 0.*k2[1] + 0.*k3[1] + 125/108.*k4[1] - 65/27.*k5[1] + 125/54.*k6[1]) * Dt)
@@ -805,7 +805,7 @@ func fehl67step(Lijst []*Particle) {
 		temp := p.tempfield
 		p.k7 = p.tau(temp)
 
-		p.M=p.tempm.MAdd(31/300.*Dt,p.k1).MAdd(61/225.*Dt,p.k5).MAdd(-2/9.*Dt,p.k6).MAdd(13/900.*Dt,p.k7)
+		p.M = p.tempm.MAdd(31/300.*Dt, p.k1).MAdd(61/225.*Dt, p.k5).MAdd(-2/9.*Dt, p.k6).MAdd(13/900.*Dt, p.k7)
 		//p.M = p.tempm
 		//p.M[0] += ((31/300.*k1[0] + 0.*k2[0] + 0.*k3[0] + 0.*k4[0] + 61/225.*k5[0] - 2/9.*k6[0] + +13/900.*k7[0]) * Dt)
 		//p.M[1] += ((31/300.*k1[1] + 0.*k2[1] + 0.*k3[1] + 0.*k4[1] + 61/225.*k5[1] - 2/9.*k6[1] + +13/900.*k7[1]) * Dt)
@@ -819,7 +819,7 @@ func fehl67step(Lijst []*Particle) {
 		temp := p.tempfield
 		p.k8 = p.tau(temp)
 
-		p.M=p.tempm.MAdd(2.*Dt,p.k1).MAdd(-53/6.*Dt,p.k4).MAdd(704/45.*Dt,p.k5).MAdd(-107/9.*Dt,p.k6).MAdd(67/90.*Dt,p.k7).MAdd(3.*Dt,p.k8)
+		p.M = p.tempm.MAdd(2.*Dt, p.k1).MAdd(-53/6.*Dt, p.k4).MAdd(704/45.*Dt, p.k5).MAdd(-107/9.*Dt, p.k6).MAdd(67/90.*Dt, p.k7).MAdd(3.*Dt, p.k8)
 		//p.M = p.tempm
 		//p.M[0] += ((2.*k1[0] + 0.*k2[0] + 0.*k3[0] - 53/6.*k4[0] + 704/45.*k5[0] - 107/9.*k6[0] + 67/90.*k7[0] + 3.*k8[0]) * Dt)
 		//p.M[1] += ((2.*k1[1] + 0.*k2[1] + 0.*k3[1] - 53/6.*k4[1] + 704/45.*k5[1] - 107/9.*k6[1] + 67/90.*k7[1] + 3.*k8[1]) * Dt)
@@ -833,7 +833,7 @@ func fehl67step(Lijst []*Particle) {
 		temp := p.tempfield
 		p.k9 = p.tau(temp)
 
-		p.M=p.tempm.MAdd(-91/108.*Dt,p.k1).MAdd(23/108.*Dt,p.k4).MAdd(-976/135.*Dt,p.k5).MAdd(311/54.*Dt,p.k6).MAdd(-19/60.*Dt,p.k7).MAdd(17/6.*Dt,p.k8).MAdd(-1/12.*Dt,p.k9)
+		p.M = p.tempm.MAdd(-91/108.*Dt, p.k1).MAdd(23/108.*Dt, p.k4).MAdd(-976/135.*Dt, p.k5).MAdd(311/54.*Dt, p.k6).MAdd(-19/60.*Dt, p.k7).MAdd(17/6.*Dt, p.k8).MAdd(-1/12.*Dt, p.k9)
 		//p.M = p.tempm
 		//p.M[0] += ((-91/108.*k1[0] + 0.*k2[0] + 0.*k3[0] + 23/108.*k4[0] - 976/135.*k5[0] + 311/54.*k6[0] - 19/60.*k7[0] + 17/6.*k8[0] - 1/12.*k9[0]) * Dt)
 		//p.M[1] += ((-91/108.*k1[1] + 0.*k2[1] + 0.*k3[1] + 23/108.*k4[1] - 976/135.*k5[1] + 311/54.*k6[1] - 19/60.*k7[1] + 17/6.*k8[1] - 1/12.*k9[1]) * Dt)
@@ -847,7 +847,7 @@ func fehl67step(Lijst []*Particle) {
 		temp := p.tempfield
 		p.k10 = p.tau(temp)
 
-		p.M=p.tempm.MAdd(2383/4100.*Dt,p.k1).MAdd(-341/164.*Dt,p.k4).MAdd(4496/1025.*Dt,p.k5).MAdd(-301/82.*Dt,p.k6).MAdd(2133/4100.*Dt,p.k7).MAdd(45/82.*Dt,p.k8).MAdd(45/164.*Dt,p.k9).MAdd(18/41.*Dt,p.k10)
+		p.M = p.tempm.MAdd(2383/4100.*Dt, p.k1).MAdd(-341/164.*Dt, p.k4).MAdd(4496/1025.*Dt, p.k5).MAdd(-301/82.*Dt, p.k6).MAdd(2133/4100.*Dt, p.k7).MAdd(45/82.*Dt, p.k8).MAdd(45/164.*Dt, p.k9).MAdd(18/41.*Dt, p.k10)
 		//p.M = p.tempm
 		//p.M[0] += ((2383/4100.*k1[0] + 0.*k2[0] + 0.*k3[0] - 341/164.*k4[0] + 4496/1025.*k5[0] - 301/82.*k6[0] + 2133/4100.*k7[0] + 45/82.*k8[0] + 45/164.*k9[0] + 18/41.*k10[0]) * Dt)
 		//p.M[1] += ((2383/4100.*k1[1] + 0.*k2[1] + 0.*k3[1] - 341/164.*k4[1] + 4496/1025.*k5[1] - 301/82.*k6[1] + 2133/4100.*k7[1] + 45/82.*k8[1] + 45/164.*k9[1] + 18/41.*k10[1]) * Dt)
@@ -861,7 +861,7 @@ func fehl67step(Lijst []*Particle) {
 		temp := p.tempfield
 		p.k11 = p.tau(temp)
 
-		p.M=p.tempm.MAdd(3/205.*Dt,p.k1).MAdd(-6/41.*Dt,p.k6).MAdd(-3/205.*Dt,p.k7).MAdd(-3/41.*Dt,p.k8).MAdd(3/41.*Dt,p.k9).MAdd(6/41.*Dt,p.k10)
+		p.M = p.tempm.MAdd(3/205.*Dt, p.k1).MAdd(-6/41.*Dt, p.k6).MAdd(-3/205.*Dt, p.k7).MAdd(-3/41.*Dt, p.k8).MAdd(3/41.*Dt, p.k9).MAdd(6/41.*Dt, p.k10)
 		//p.M = p.tempm
 		//p.M[0] += ((3/205.*k1[0] + 0.*k2[0] + 0.*k3[0] + 0.*k4[0] + 0.*k5[0] - 6/41.*k6[0] - 3/205.*k7[0] - 3/41.*k8[0] + 3/41.*k9[0] + 6/41.*k10[0]) * Dt)
 		//p.M[1] += ((3/205.*k1[1] + 0.*k2[1] + 0.*k3[1] + 0.*k4[1] + 0.*k5[1] - 6/41.*k6[1] - 3/205.*k7[1] - 3/41.*k8[1] + 3/41.*k9[1] + 6/41.*k10[1]) * Dt)
@@ -875,7 +875,7 @@ func fehl67step(Lijst []*Particle) {
 		temp := p.tempfield
 		p.k12 = p.tau(temp)
 
-		p.M=p.tempm.MAdd(-1777/4100.*Dt,p.k1).MAdd(-341/164.*Dt,p.k4).MAdd(4496/1025.*Dt,p.k5).MAdd(-289/82.*Dt,p.k6).MAdd(2193/4100.*Dt,p.k7).MAdd(51/82.*Dt,p.k8).MAdd(33/164.*Dt,p.k9).MAdd(12/41.*Dt,p.k10).MAdd(Dt,p.k12)
+		p.M = p.tempm.MAdd(-1777/4100.*Dt, p.k1).MAdd(-341/164.*Dt, p.k4).MAdd(4496/1025.*Dt, p.k5).MAdd(-289/82.*Dt, p.k6).MAdd(2193/4100.*Dt, p.k7).MAdd(51/82.*Dt, p.k8).MAdd(33/164.*Dt, p.k9).MAdd(12/41.*Dt, p.k10).MAdd(Dt, p.k12)
 		//p.M = p.tempm
 		//p.M[0] += ((-1777/4100.*k1[0] + 0.*k2[0] + 0.*k3[0] - 341/164.*k4[0] + 4496/1025.*k5[0] - 289/82.*k6[0] + 2193/4100.*k7[0] + 51/82.*k8[0] + 33/164.*k9[0] + 12/41.*k10[0] + 1.*k12[0]) * Dt)
 		//p.M[1] += ((-1777/4100.*k1[1] + 0.*k2[1] + 0.*k3[1] - 341/164.*k4[1] + 4496/1025.*k5[1] - 289/82.*k6[1] + 2193/4100.*k7[1] + 51/82.*k8[1] + 33/164.*k9[1] + 12/41.*k10[1] + 1.*k12[1]) * Dt)
@@ -886,14 +886,14 @@ func fehl67step(Lijst []*Particle) {
 		temp := p.tempfield
 		p.k13 = p.tau(temp)
 
-		p.M=p.tempm.MAdd(41/840.*Dt,p.k1).MAdd(34/105.*Dt,p.k6).MAdd(9/35.*Dt,p.k7).MAdd(9/35.*Dt,p.k8).MAdd(9/280.*Dt,p.k9).MAdd(9/280.*Dt,p.k10).MAdd(41/840.*Dt,p.k11)
+		p.M = p.tempm.MAdd(41/840.*Dt, p.k1).MAdd(34/105.*Dt, p.k6).MAdd(9/35.*Dt, p.k7).MAdd(9/35.*Dt, p.k8).MAdd(9/280.*Dt, p.k9).MAdd(9/280.*Dt, p.k10).MAdd(41/840.*Dt, p.k11)
 		//p.M = p.tempm
 		//p.tempm[0] += ((41/840.*k1[0] + 34/105.*k6[0] + 9/35.*k7[0] + 9/35.*k8[0] + 9/280.*k9[0] + 9/280.*k10[0] + 41/840.*k11[0]) * Dt)
 		//p.tempm[1] += ((41/840.*k1[1] + 34/105.*k6[1] + 9/35.*k7[1] + 9/35.*k8[1] + 9/280.*k9[1] + 9/280.*k10[1] + 41/840.*k11[1]) * Dt)
 		//p.tempm[2] += ((41/840.*k1[2] + 34/105.*k6[2] + 9/35.*k7[2] + 9/35.*k8[2] + 9/280.*k9[2] + 9/280.*k10[2] + 41/840.*k11[2]) * Dt)
 		//sixth order solution
 
-		p.M=p.tempm.MAdd(-41/840.*Dt,p.k1).MAdd(-41/840.*Dt,p.k11).MAdd(41/840.*Dt,p.k12).MAdd(41/840.*Dt,p.k13)
+		p.M = p.tempm.MAdd(-41/840.*Dt, p.k1).MAdd(-41/840.*Dt, p.k11).MAdd(41/840.*Dt, p.k12).MAdd(41/840.*Dt, p.k13)
 		//p.M[0] = p.tempm[0] + ((-41/840.*k1[0] - 41/840.*k11[0] + 41/840.*k12[0] + 41/840.*k13[0]) * Dt)
 		//p.M[1] = p.tempm[1] + ((-41/840.*k1[1] - 41/840.*k11[1] + 41/840.*k12[1] + 41/840.*k13[1]) * Dt)
 		//p.M[2] = p.tempm[2] + ((-41/840.*k1[2] - 41/840.*k11[2] + 41/840.*k12[2] + 41/840.*k13[2]) * Dt)

@@ -36,6 +36,11 @@ type Particle struct {
 	k13        Vector
 }
 
+//returns the volume of a particle
+func (p Particle) volume() float64 {
+	return (4. / 3. * math.Pi * p.r * p.r * p.r)
+}
+
 func NewParticle(center Vector, radius float64, M Vector, Msat float64) *Particle {
 	return &Particle{center: center, M: M, r: radius, msat: Msat}
 }

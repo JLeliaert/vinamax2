@@ -111,6 +111,9 @@ func InitFMM(worldSize Vector, nLevels int) {
 	Log("finding partners...")
 	Root.FindPartners(Level[0])
 	Log(time.Since(start))
+	//TODO these have to be called when  they work
+	//PruneTree()
+	//CalculateCenterOfMags()
 
 	printFMMStats()
 }
@@ -118,4 +121,47 @@ func InitFMM(worldSize Vector, nLevels int) {
 func printFMMStats() {
 	nLeaf := int(math.Pow(8, float64(len(Level)-1)) + 0.5)
 	Log(totalCells, "cells, avg", totalPartners/totalCells, "partners/cell, avg", totalNear/nLeaf, "near/leaf")
+}
+
+//Prunes all the empty cells from the fmm tree
+func PruneTree() {
+	prune(&Root)
+}
+
+//ALL THESE ARE TODO /////////////////////////////////////////////////////////////////////////////////////
+//recursively checks if a child cell contains particles and if not prunes them from the FMMtree
+//TODO is not really recursive yet!!
+func prune(c *Cell) {
+	for _, c := range c.child {
+		if c.IsLeaf() == false {
+			if len(c.particles) != 0 {
+				prune(c)
+			} else {
+				c = nil
+			}
+		}
+	}
+}
+
+//TODO make recursive
+func CalculateCenterOfMags() {
+	updatecom(&Root)
+}
+
+//calculates com of a cell and than calls its child cells to do the same
+func updatecom(c *Cell) {
+	c.centerofmag = Vector{0, 0, 0}
+	totalmoment := 0.
+	for _, p := range c.particles {
+		totalmoment += p.volume() * p.msat
+		c.centerofmag.MAdd(p.volume()*p.msat, p.center)
+		c.centerofmag.Div(totalmoment)
+	}
+	if c.IsLeaf() == false {
+		for _, d := range c.child {
+			if c != nil {
+				updatecom(d)
+			}
+		}
+	}
 }

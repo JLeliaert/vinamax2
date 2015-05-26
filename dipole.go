@@ -72,8 +72,8 @@ func d(c, i int, m, R Vector) float64 {
 func ddiag(i int, m, R Vector) float64 {
 	r2 := R.Dot(R)
 	pre := 1 / (4 * math.Pi)
-//	return pre * (3*x*m.Dot(R)/math.Pow(r2, 5./2.) - m[i]/math.Pow(r2, 3./2.))
-	return pre * 3*m.Dot(R)/math.Pow(r2, 5./2.) + doff(i,i,m,R)
+	//	return pre * (3*x*m.Dot(R)/math.Pow(r2, 5./2.) - m[i]/math.Pow(r2, 3./2.))
+	return pre*3*m.Dot(R)/math.Pow(r2, 5./2.) + doff(i, i, m, R)
 }
 
 // dBx/dy = -15xy mdotR / r^7 + 3y m_x/r^5 + 3m_y x / r^5

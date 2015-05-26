@@ -8,6 +8,7 @@ type Cell struct {
 	partner          []*Cell     // I receive field taylor expansions from these cells
 	near             []*Cell     // I recieve brute-force field contributions form these cells
 	center           Vector      // my position
+	centerofmag      Vector      // my center of magnetization
 	size             Vector      // my diameter (x, y, z)
 	m                Vector      // sum of child+particle magnetizations
 	b0               Vector      // Field in cell center
@@ -24,7 +25,6 @@ func (c *Cell) addParticle(p *Particle) {
 		}
 		c.particles = append(c.particles, p)
 	} else {
-
 		for _, c := range c.child {
 			if c.contains(p.center) {
 				c.addParticle(p)
@@ -196,6 +196,8 @@ func (c *Cell) Divide(nLevels int) {
 }
 
 func (c *Cell) Center() Vector { return c.center }
+
+func (c *Cell) CenterOfMag() Vector { return c.centerofmag }
 
 func (c *Cell) String() string {
 	if c == nil {
