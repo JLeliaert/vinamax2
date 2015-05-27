@@ -66,7 +66,7 @@ func (c *Cell) updateBdemag0(parent *Cell) {
 // like addPartnerFields1, but 0th order.
 func (c *Cell) addPartnerFields0() {
 	for _, p := range c.partner {
-		r := Vector{c.center[X] - p.center[X], c.center[Y] - p.center[Y], c.center[Z] - p.center[Z]}
+		r := Vector{c.CenterOfMag()[X] - p.CenterOfMag()[X], c.CenterOfMag()[Y] - p.CenterOfMag()[Y], c.CenterOfMag()[Z] - p.CenterOfMag()[Z]}
 		b := DipoleField(p.m, r)
 		c.b0[X] += b[X]
 		c.b0[Y] += b[Y]
@@ -165,7 +165,7 @@ func (c *Cell) IsLeaf() bool {
 // Are the cells considered far separated?
 func IsFar(a, b *Cell) bool {
 	// TODO:  improve!
-	dist := a.center.Sub(b.center).Len()
+	dist := a.CenterOfMag().Sub(b.CenterOfMag()).Len()
 	return dist > Proximity*a.size.Len()
 }
 

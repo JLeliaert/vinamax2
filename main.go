@@ -34,7 +34,7 @@ func main() {
 	InitFMM(worldSize, NLEVEL)
 
 	r := 1e-9
-	msat := 1e6
+	msat := 1.
 
 	// place particles with m=0 , as field probes
 	baseLevel := Level[NLEVEL-1]
@@ -43,11 +43,19 @@ func main() {
 		AddParticle(NewParticle(c.Center(), r, M, msat))
 	}
 
+	r = 1e-9
+	msat = 1e6
+
 	// place one magneticed particle as source
 	M := Vector{1, 0, 0}
 	AddParticle(NewParticle(Vector{-0.03125, -0.03125, -0.03125}, r, M, msat))
 
-	FMMOrder = 1
+	InitFMM2()
+	//for _, c := range Level[1] {
+	//	fmt.Println(c.Center(), c.Moment(), c.CenterOfMag())
+	//}
+
+	FMMOrder = 0
 	Log("Order:", FMMOrder, " Proxy:", Proximity)
 	for i := 0; i < 1; i++ {
 		println(i)

@@ -9,7 +9,7 @@ func (c *Cell) updateBdemag1(parent *Cell) {
 
 	// propagate parent field expansion to this cell,
 	// (applies shift to Taylor expansion)
-	sh := parent.center.Sub(c.center)
+	sh := parent.CenterOfMag().Sub(c.CenterOfMag())
 	c.b0 = parent.b0.MAdd(sh[X], parent.dbdx).MAdd(sh[Y], parent.dbdy).MAdd(sh[Z], parent.dbdz)
 	c.dbdx = parent.dbdx
 	c.dbdy = parent.dbdy
@@ -30,7 +30,7 @@ func (c *Cell) updateBdemag1(parent *Cell) {
 // start with 1st order evaluation of field in cell.
 func (c *Cell) addNearFields1() {
 	for _, dst := range c.particles {
-		sh := dst.center.Sub(c.center)
+		sh := dst.center.Sub(c.CenterOfMag())
 		dst.b = c.b0.MAdd(sh[X], c.dbdx).MAdd(sh[Y], c.dbdy).MAdd(sh[Z], c.dbdz)
 		c.addNearFields(dst)
 	}
@@ -39,7 +39,7 @@ func (c *Cell) addNearFields1() {
 // add 1st-order expansions of fields of partner sources
 func (c *Cell) addPartnerFields1() {
 	for _, p := range c.partner {
-		r := c.center.Sub(p.center)
+		r := c.CenterOfMag().Sub(p.CenterOfMag())
 		c.b0 = c.b0.Add(DipoleField(p.m, r))
 		c.dbdx = c.dbdx.Add(DiffDipole(X, p.m, r))
 		c.dbdy = c.dbdy.Add(DiffDipole(Y, p.m, r))
