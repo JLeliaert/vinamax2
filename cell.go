@@ -9,6 +9,7 @@ type Cell struct {
 	near             []*Cell     // I recieve brute-force field contributions form these cells
 	center           Vector      // my position
 	centerofmag      Vector      // my center of magnetization
+	moment           float64     // total magnetic moment of the particles in the cell
 	size             Vector      // my diameter (x, y, z)
 	m                Vector      // sum of child+particle magnetizations
 	b0               Vector      // Field in cell center
@@ -222,6 +223,31 @@ func (c *Cell) Len() int {
 		}
 		return num
 	}
+}
+
+// recursively updates the total magnetic moment of each cell
+func updatemoments(c *Cell) {
+	c.moment = c.updatemoment()
+}
+
+//returns the magnetic moment of a cell after updating it
+func (c *Cell) updatemoment() float64 {
+	c.moment = 0.
+	if c.IsLeaf() {
+		for _, p := range c.particles {
+			c.moment += p.volume() * p.msat
+		}
+	} else {
+		for _, d := range c.child {
+			c.moment += d.updatemoment()
+		}
+	}
+	return c.moment
+}
+
+//returns the moment of a cell
+func (c *Cell) Moment() float64 {
+	return c.moment
 }
 
 // unit vectors for left-back-bottom, left-back-top, ...

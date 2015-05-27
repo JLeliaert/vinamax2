@@ -111,9 +111,8 @@ func InitFMM(worldSize Vector, nLevels int) {
 	Log("finding partners...")
 	Root.FindPartners(Level[0])
 	Log(time.Since(start))
-	//TODO these have to be called when  they work
-	//PruneTree()
-	//CalculateCenterOfMags()
+	PruneTree()
+	CalculateCenterOfMags()
 
 	printFMMStats()
 }
@@ -140,24 +139,24 @@ func prune(c *Cell) {
 }
 
 func CalculateCenterOfMags() {
+	updatemoments(&Root)
 	updatecom(&Root)
 }
 
-//calculates com of a cell and than calls its child cells to do the same
-//TODO make recursive
-func updatecom(c *Cell) {
+//recursively calculates com of a cell
+func updatecom(c *Cell) Vector {
 	c.centerofmag = Vector{0, 0, 0}
-	totalmoment := 0.
-	for _, p := range c.particles {
-		totalmoment += p.volume() * p.msat
-		c.centerofmag.MAdd(p.volume()*p.msat, p.center)
-		c.centerofmag.Div(totalmoment)
-	}
-	if c.IsLeaf() == false {
+	if c.IsLeaf() {
+		for _, p := range c.particles {
+			c.centerofmag.MAdd(p.volume()*p.msat, p.center)
+		}
+	} else {
 		for _, d := range c.child {
-			if c != nil {
-				updatecom(d)
+			if d != nil {
+				c.centerofmag.MAdd(d.Moment(), updatecom(d))
 			}
 		}
 	}
+	c.centerofmag.Div(c.Moment())
+	return c.centerofmag
 }
