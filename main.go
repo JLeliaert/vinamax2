@@ -30,24 +30,25 @@ func main() {
 	worldSize := Vector{1, 1, 1}
 	NLEVEL := 5
 
-	Proximity = 1.1
+	Proximity = 1.2
 	InitFMM(worldSize, NLEVEL)
 
 	r := 1e-9
 	msat := 1.
 
 	//place particles with m=0 as field probes
-		for i :=-0.5;i<0.5;i+=0.05{
-		for j :=-0.5;j<0.5;j+=0.05{
-		M := Vector{0, 0, 0}
-			AddParticle(NewParticle(Vector{i,j,-0.03125}, r, M, msat))
-}}
+	for i := -0.5; i < 0.5; i += 0.05 {
+		for j := -0.5; j < 0.5; j += 0.05 {
+			M := Vector{0, 0, 0}
+			AddParticle(NewParticle(Vector{i, j, 0}, r, M, msat))
+		}
+	}
 	r = 1e-9
 	msat = 1e6
 
 	// place one magneticed particle as source
 	M := Vector{1, 0, 0}
-	AddParticle(NewParticle(Vector{-0.03125, -0.03125, -0.03125}, r, M, msat))
+	AddParticle(NewParticle(Vector{-0.0, -0.0, -0.}, r, M, msat))
 
 	InitFMM2()
 	//for _, c := range Level[1] {
@@ -67,9 +68,9 @@ func main() {
 		r := p.Center()
 		b := p.Bdemag()
 		b = b.Div(b.Len()).Mul(1. / 16.) // normalize
-		if r[Z] == -0.03125 {
-			fmt.Println(r[X], r[Y], r[Z], b[X], b[Y], b[Z])
-		}
+		//	if r[Z] == -0.03125 {
+		fmt.Println(r[X], r[Y], r[Z], b[X], b[Y], b[Z])
+		//	}
 	}
 	Log("#Dipole evaluations:", NEvals)
 

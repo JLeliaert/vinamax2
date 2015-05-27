@@ -109,7 +109,7 @@ func InitFMM(worldSize Vector, nLevels int) {
 
 }
 
-func InitFMM2(){
+func InitFMM2() {
 	PruneTree()
 	CalculateCenterOfMags()
 	start := time.Now()
@@ -131,12 +131,16 @@ func PruneTree() {
 
 //recursively checks if a child cell contains particles and if not prunes them from the FMMtree
 func prune(c *Cell) {
-	for _, c := range c.child {
-		if c != nil {
-			if c.Len() == 0 {
-				c = nil
+	for _, d := range c.child {
+		if d != nil {
+			if d.Len() == 0 {
+				d = nil
 			} else {
-				prune(c)
+				if d.Len() == 1 && c.Len() == 1 {
+					d = nil
+				} else {
+					prune(d)
+				}
 			}
 		}
 	}
@@ -152,16 +156,16 @@ func updatecom(c *Cell) Vector {
 	c.centerofmag = Vector{0., 0., 0.}
 	if c.IsLeaf() {
 		for _, p := range c.particles {
-			c.centerofmag=c.centerofmag.MAdd(p.volume()*p.msat,p.center)
+			c.centerofmag = c.centerofmag.MAdd(p.volume()*p.msat, p.center)
 		}
 	} else {
 		for _, d := range c.child {
 			if d != nil {
-				c.centerofmag=c.centerofmag.MAdd(d.Moment(), updatecom(d))
+				c.centerofmag = c.centerofmag.MAdd(d.Moment(), updatecom(d))
 			}
 		}
 	}
-	c.centerofmag=c.centerofmag.Div(c.Moment())
+	c.centerofmag = c.centerofmag.Div(c.Moment())
 	if c.Moment() == 0 {
 		return c.center
 	}

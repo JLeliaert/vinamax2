@@ -41,8 +41,8 @@ func (c *Cell) addPartnerFields1() {
 	for _, p := range c.partner {
 		r := c.CenterOfMag().Sub(p.CenterOfMag())
 		c.b0 = c.b0.Add(DipoleField(p.m, r))
-		c.dbdx = c.dbdx.Sub(Vector{DiffBxdx(p.m, r),DiffBydx(p.m, r),DiffBzdx(p.m, r)})
-		c.dbdy = c.dbdy.Sub(Vector{DiffBxdy(p.m, r),DiffBydy(p.m, r),DiffBzdy(p.m, r)})
-		c.dbdz = c.dbdz.Sub(Vector{DiffBxdz(p.m, r),DiffBydz(p.m, r),DiffBzdz(p.m, r)})
+		c.dbdx = c.dbdx.Sub(Vector{DiffBxdx(p.m, r), DiffBydx(p.m, r), DiffBzdx(p.m, r)})
+		c.dbdy = c.dbdy.Sub(Vector{DiffBxdy(p.m, r), DiffBydy(p.m, r), DiffBzdy(p.m, r)})
+		c.dbdz = c.dbdz.Sub(Vector{DiffBxdz(p.m, r), DiffBydz(p.m, r), DiffBzdz(p.m, r)})
 	}
 }
