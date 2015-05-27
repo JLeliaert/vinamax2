@@ -1,6 +1,9 @@
 package vinamax2
 
-import "math"
+import (
+	"math"
+	"fmt"
+)
 
 var NEvals int
 
@@ -30,6 +33,104 @@ func DipoleField(m, R Vector) Vector {
 
 // Partial derivative (dB/di) of field generated at position R relative to dipole m.
 // Direction of derivative: i = X,Y or Z.
+
+func DiffBxdx(m, R Vector) float64{
+	x := R[X]
+	m_x := m[X]
+	r2 := R.Dot(R)
+	pre := 1 / (4 * math.Pi) 
+	
+	return pre * (-15*x*x*m.Dot(R)/math.Pow(r2, 7./2.) + 3*x*m_x/math.Pow(r2, 5./2.) + 3*m_x*x/math.Pow(r2, 5./2.))+pre*3*m.Dot(R)/math.Pow(r2, 5./2.)
+}
+
+func DiffBxdy(m, R Vector) float64{
+	x := R[X]
+	y := R[Y]
+	m_x := m[X]
+	m_y := m[Y]
+	r2 := R.Dot(R)
+	pre := 1 / (4 * math.Pi) 
+	
+	return pre * (-15*x*y*m.Dot(R)/math.Pow(r2, 7./2.) + 3*y*m_x/math.Pow(r2, 5./2.) + 3*m_y*x/math.Pow(r2, 5./2.))
+}
+
+func DiffBxdz(m, R Vector) float64{
+	x := R[X]
+	z := R[Z]
+	m_x := m[X]
+	m_z := m[Z]
+	r2 := R.Dot(R)
+	pre := 1 / (4 * math.Pi) 
+	
+	return pre * (-15*x*z*m.Dot(R)/math.Pow(r2, 7./2.) + 3*z*m_x/math.Pow(r2, 5./2.) + 3*m_z*x/math.Pow(r2, 5./2.))
+}
+
+
+
+func DiffBydx(m, R Vector) float64{
+	x := R[X]
+	y := R[Y]
+	m_x := m[X]
+	m_y := m[Y]
+	r2 := R.Dot(R)
+	pre := 1 / (4 * math.Pi) 
+	
+	return pre * (-15*x*y*m.Dot(R)/math.Pow(r2, 7./2.) + 3*x*m_y/math.Pow(r2, 5./2.) + 3*m_x*y/math.Pow(r2, 5./2.))
+}
+
+func DiffBydy(m, R Vector) float64{
+	y := R[Y]
+	m_y := m[Y]
+	r2 := R.Dot(R)
+	pre := 1 / (4 * math.Pi) 
+	
+	return pre * (-15*y*y*m.Dot(R)/math.Pow(r2, 7./2.) + 3*y*m_y/math.Pow(r2, 5./2.) + 3*m_y*y/math.Pow(r2, 5./2.))+pre*3*m.Dot(R)/math.Pow(r2, 5./2.)
+}
+
+func DiffBydz(m, R Vector) float64{
+	y := R[Y]
+	z := R[Z]
+	m_y := m[Y]
+	m_z := m[Z]
+	r2 := R.Dot(R)
+	pre := 1 / (4 * math.Pi) 
+	
+	return pre * (-15*y*z*m.Dot(R)/math.Pow(r2, 7./2.) + 3*z*m_y/math.Pow(r2, 5./2.) + 3*m_z*y/math.Pow(r2, 5./2.))
+}
+
+
+func DiffBzdx(m, R Vector) float64{
+	x := R[X]
+	z := R[Z]
+	m_x := m[X]
+	m_z := m[Z]
+	r2 := R.Dot(R)
+	pre := 1 / (4 * math.Pi) 
+	
+	return pre * (-15*x*z*m.Dot(R)/math.Pow(r2, 7./2.) + 3*x*m_z/math.Pow(r2, 5./2.) + 3*m_x*z/math.Pow(r2, 5./2.))
+}
+
+func DiffBzdz(m, R Vector) float64{
+	z := R[Z]
+	m_z := m[Z]
+	r2 := R.Dot(R)
+	pre := 1 / (4 * math.Pi) 
+	
+	return pre * (-15*z*z*m.Dot(R)/math.Pow(r2, 7./2.) + 3*z*m_z/math.Pow(r2, 5./2.) + 3*m_z*z/math.Pow(r2, 5./2.))+pre*3*m.Dot(R)/math.Pow(r2, 5./2.)
+}
+
+func DiffBzdy(m, R Vector) float64{
+	y := R[Y]
+	z := R[Z]
+	m_y := m[Y]
+	m_z := m[Z]
+	r2 := R.Dot(R)
+	pre := 1 / (4 * math.Pi) 
+	
+	return pre * (-15*y*z*m.Dot(R)/math.Pow(r2, 7./2.) + 3*z*m_y/math.Pow(r2, 5./2.) + 3*m_z*y/math.Pow(r2, 5./2.))
+}
+
+
 
 func DiffDipole(i int, m, R Vector) Vector {
 
@@ -73,6 +174,8 @@ func ddiag(i int, m, R Vector) float64 {
 	r2 := R.Dot(R)
 	pre := 1 / (4 * math.Pi)
 	//	return pre * (3*x*m.Dot(R)/math.Pow(r2, 5./2.) - m[i]/math.Pow(r2, 3./2.))
+	fmt.Println("diag",pre*3*m.Dot(R)/math.Pow(r2, 5./2.))
+	fmt.Println("offdiag",doff(i, i, m, R))
 	return pre*3*m.Dot(R)/math.Pow(r2, 5./2.) + doff(i, i, m, R)
 }
 

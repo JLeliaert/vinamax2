@@ -36,13 +36,12 @@ func main() {
 	r := 1e-9
 	msat := 1.
 
-	// place particles with m=0 , as field probes
-	baseLevel := Level[NLEVEL-1]
-	for _, c := range baseLevel {
+	//place particles with m=0 as field probes
+		for i :=-0.5;i<0.5;i+=0.05{
+		for j :=-0.5;j<0.5;j+=0.05{
 		M := Vector{0, 0, 0}
-		AddParticle(NewParticle(c.Center(), r, M, msat))
-	}
-
+			AddParticle(NewParticle(Vector{i,j,-0.03125}, r, M, msat))
+}}
 	r = 1e-9
 	msat = 1e6
 
@@ -55,7 +54,7 @@ func main() {
 	//	fmt.Println(c.Center(), c.Moment(), c.CenterOfMag())
 	//}
 
-	FMMOrder = 0
+	FMMOrder = 1
 	Log("Order:", FMMOrder, " Proxy:", Proximity)
 	for i := 0; i < 1; i++ {
 		println(i)
