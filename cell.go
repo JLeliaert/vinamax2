@@ -211,6 +211,19 @@ func (c *Cell) String() string {
 	}
 }
 
+//returns the amount of particles lying in this cell
+func (c *Cell) Len() int {
+	if c.IsLeaf() {
+		return len(c.particles)
+	} else {
+		num := 0
+		for _, d := range c.child {
+			num += d.Len()
+		}
+		return num
+	}
+}
+
 // unit vectors for left-back-bottom, left-back-top, ...
 var direction = [8]Vector{
 	{-1, -1, -1}, {-1, -1, +1}, {-1, +1, -1}, {-1, +1, +1},

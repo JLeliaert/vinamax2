@@ -128,27 +128,23 @@ func PruneTree() {
 	prune(&Root)
 }
 
-//ALL THESE ARE TODO /////////////////////////////////////////////////////////////////////////////////////
 //recursively checks if a child cell contains particles and if not prunes them from the FMMtree
-//TODO is not really recursive yet!!
 func prune(c *Cell) {
 	for _, c := range c.child {
-		if c.IsLeaf() == false {
-			if len(c.particles) != 0 {
-				prune(c)
-			} else {
-				c = nil
-			}
+		if c.Len() == 0 {
+			c = nil
+		} else {
+			prune(c)
 		}
 	}
 }
 
-//TODO make recursive
 func CalculateCenterOfMags() {
 	updatecom(&Root)
 }
 
 //calculates com of a cell and than calls its child cells to do the same
+//TODO make recursive
 func updatecom(c *Cell) {
 	c.centerofmag = Vector{0, 0, 0}
 	totalmoment := 0.
