@@ -14,8 +14,9 @@ import (
 func main() {
 
 	worldsize := 2e-6
-	nLevels := 5
+	nLevels := 1
 	InitFMM(Vector{worldsize, worldsize, worldsize}, nLevels)
+	FMMOrder = -1
 
 	r := 16e-9
 	M := Vector{0, 1, 0}
@@ -26,6 +27,7 @@ func main() {
 
 	AddParticle(p1)
 	AddParticle(p2)
+	InitFMM2()
 
 	B_ext = func(t float64) (float64, float64, float64) { return 0.001, 0., 0.0 }
 
