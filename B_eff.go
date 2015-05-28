@@ -9,7 +9,7 @@ var rng = rand.New(rand.NewSource(0))
 
 //Sums the individual fields to the effective field working on the particle
 func (p *Particle) b_eff(temp Vector) Vector {
-	return p.anis().Add(p.zeeman().Add(temp)).MAdd(mu0*p.msat*p.volume(),p.b)
+	return p.anis().Add(p.zeeman().Add(temp)).Add(p.b)
 }
 
 //Set the randomseed for the temperature

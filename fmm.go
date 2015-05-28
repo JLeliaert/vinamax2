@@ -41,7 +41,7 @@ func CalcDemag() {
 	default:
 		panic(fmt.Sprint("invalid FMMOrder:", FMMOrder))
 	case 0:
-		Root.updateBdemag0(&Root) // we abuse root as parent, it only propagetes zero fields
+		Root.updateBdemag0(&Root) // we abuse root as parent, it only propagates zero fields
 	case 1:
 		Root.updateBdemag1(&Root)
 	case -1:

@@ -137,7 +137,7 @@ func (p *Particle) BruteDemag() Vector {
 	var B Vector
 	for _, src := range Particles {
 		r := p.center.Sub(src.center)
-		B = B.Add(DipoleField(src.M, r))
+		B = B.MAdd(src.msat*src.volume(),DipoleField(src.M, r))
 	}
 	return B
 }

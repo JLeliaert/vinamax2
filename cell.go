@@ -67,7 +67,7 @@ func (c *Cell) updateBdemag0(parent *Cell) {
 func (c *Cell) addPartnerFields0() {
 	for _, p := range c.partner {
 		r := Vector{c.CenterOfMag()[X] - p.CenterOfMag()[X], c.CenterOfMag()[Y] - p.CenterOfMag()[Y], c.CenterOfMag()[Z] - p.CenterOfMag()[Z]}
-		b := DipoleField(p.m, r)
+		b := DipoleField(p.m.Mul(p.moment), r)
 		c.b0[X] += b[X]
 		c.b0[Y] += b[Y]
 		c.b0[Z] += b[Z]
@@ -87,7 +87,7 @@ func (c *Cell) addNearFields(dst *Particle) {
 	for _, n := range c.near {
 		for _, src := range n.particles {
 			r := dst.center.Sub(src.center)
-			dst.b = dst.b.Add(DipoleField(src.M, r))
+			dst.b = dst.b.Add(DipoleField(src.M.Mul(src.volume()*src.msat), r))
 		}
 	}
 }

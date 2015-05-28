@@ -27,8 +27,7 @@ func TestFMM0th(t *testing.T) {
 	}
 
 	//solution := Vector{5850.136490409946, 4680.109192327974, 3510.08189424605}
-	//solution := Vector{5350.315822067974, 4280.252657654369, 3210.189493240797}
-	solution:= Vector{0.006723405152397595, 0.005378724121918051, 0.0040340430914385635}	
+	solution:= Vector{0.028162933645173385, 0.02253034691613862, 0.01689776018710405}
 
 	tol := 1e-6
 	if Btotal.Sub(solution).Len() > tol {
@@ -73,6 +72,6 @@ func initTestWorld() {
 
 	// place one magneticed particle as source
 	hotcell := baseLevel[0]
-	AddParticle(&Particle{M: Vector{1, 2, 3}, center: hotcell.center})
+	AddParticle(&Particle{M: Vector{1, 2, 3}, center: hotcell.center,msat:1.,r:1.})
 	InitFMM2()
 }
